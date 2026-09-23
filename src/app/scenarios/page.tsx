@@ -28,9 +28,11 @@ import {
   INITIAL_SNAPSHOTS,
 } from "@/components/scenarios/scenarioData";
 import { useRouter } from "next/navigation";
+import { usePlanningRun } from "@/context/PlanningRunContext";
 
 export default function ScenariosPage() {
   const router = useRouter();
+  const { currentRun, loading: engineLoading, isBackend, denyBlock, addCriticalTask, resetDemo } = usePlanningRun();
 
   // Active condition and scenario lifecycle state
   const [activeCondition, setActiveCondition] = useState<ScenarioCondition>("BLOCK_DENIAL");
@@ -89,7 +91,7 @@ export default function ScenariosPage() {
 
     setEvents((prev) => [
       {
-        id: `EVT-${Date.now()}`,
+        id: `EVT-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
         timestamp,
         timeStr,
         event,
@@ -104,9 +106,10 @@ export default function ScenariosPage() {
   const handleSimulateBlockDenial = () => {
     setActiveCondition("BLOCK_DENIAL");
     setScenarioState("DENIED");
+    denyBlock().catch(console.error);
     addAuditEvent(
       "BLOCK DENIAL RECEIVED FROM OPERATING",
-      "Divisional Operating Control cancelled requested window B-014 (02:20–04:10) due to corridor congestion.",
+      "Divisional Operating Control cancelled requested window B-014 (02:20–04:10) due to corridor congestion. Sent to live planning engine.",
       "OPERATING"
     );
     addAuditEvent(
@@ -143,9 +146,16 @@ export default function ScenariosPage() {
   // Add Critical Work & Replan
   const handleAddCriticalWorkAndReplan = () => {
     setScenarioState("INSUFFICIENT_WINDOW");
+    addCriticalTask({
+      defect_type: `${criticalWork.criticality} ${criticalWork.asset}`,
+      line: "DOWN",
+      km_start: 73.5,
+      km_end: 74.0,
+      depth_mm: 7.2,
+    }).catch(console.error);
     addAuditEvent(
       "SAFETY CRITICAL DEFECT INGESTED",
-      `Added ${criticalWork.criticality} ${criticalWork.asset} at ${criticalWork.location} (${criticalWork.durationMin} min). Total demand 135m exceeds current usable window 90m.`,
+      `Added ${criticalWork.criticality} ${criticalWork.asset} at ${criticalWork.location} (${criticalWork.durationMin} min) to backend engine. Total demand 135m exceeds current usable window 90m.`,
       "ALERT"
     );
     addAuditEvent(
@@ -181,10 +191,11 @@ export default function ScenariosPage() {
     setSelectedTrain(TRAIN_OPTIONS[0]);
     setTrainOffsetMinutes(26);
     setDurationOffsetMin(0);
+    resetDemo().catch(console.error);
 
     addAuditEvent(
       "SCENARIO RESET TO BASELINE",
-      "Restored canonical B-014 (02:20–04:10) with 18 tasks and nominal train trajectories.",
+      "Restored canonical B-014 (02:20–04:10) with 18 tasks and nominal train trajectories across backend engine.",
       "BASE"
     );
   };

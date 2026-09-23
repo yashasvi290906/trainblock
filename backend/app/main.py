@@ -35,5 +35,16 @@ def root():
         "version": settings.VERSION,
         "status": "OPERATIONAL",
         "docs_url": "/docs",
-        "corridor": "Chennai Central (MAS) - Arakkonam (AJJ)"
+        "corridor": "Secunderabad (SEC) - Nandyal (NDL)"
+    }
+
+@app.get("/api/health")
+def api_health():
+    return {
+        "status": "HEALTHY",
+        "service": settings.APP_NAME,
+        "version": settings.VERSION,
+        "solver_backend": "Google OR-Tools CP-SAT",
+        "ml_backend": "XGBoost Regressor",
+        "corridor": "Secunderabad (SEC) - Nandyal (NDL)"
     }

@@ -4,6 +4,8 @@ import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { AppShell } from "@/components/shell/AppShell";
 import { usePlanningRun } from "@/context/PlanningRunContext";
+import { PlanningEngineOffline } from "@/components/common/PlanningEngineOffline";
+import { PlanningLoading } from "@/components/common/PlanningLoading";
 import {
   TrainTrack,
   ShieldCheck,
@@ -32,7 +34,8 @@ import { PlanningDrawer } from "@/components/railway/PlanningDrawer";
 import { cn } from "@/lib/utils";
 
 export default function PlanPage() {
-  const { currentRun, loading, approveCurrentPlan, replan } = usePlanningRun();
+  const { currentRun, loading, error, isBackend, approveCurrentPlan, replan, refresh, resetDemo } = usePlanningRun();
+  const isOffline = !loading && (!isBackend || !!error);
 
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [filterTier, setFilterTier] = useState<string>("ALL");
@@ -96,15 +99,33 @@ export default function PlanPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <span className="text-slate-500 font-medium">Solver:</span>
-              <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-900 border border-blue-200 font-bold text-[11px]">
-                {currentRun?.solver_result?.solver_status || "OPTIMAL"} ({currentRun?.solver_result?.solve_time_ms || 50.14}ms)
-              </span>
-            </div>
-            <RailwaySignal aspect="CLEAR" size="sm" label="VALIDATED" />
+            {currentRun?.solver_result && (
+              <div className="flex items-center gap-2">
+                <span className="text-slate-500 font-medium">Solver:</span>
+                <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-900 border border-blue-200 font-bold text-[11px]">
+                  {currentRun.solver_result.solver_status} ({currentRun.solver_result.solve_time_ms.toFixed(2)}ms)
+                </span>
+              </div>
+            )}
+            {currentRun?.validation_result && (
+              <RailwaySignal
+                aspect={currentRun.validation_result.overall_status === "VALIDATED" ? "CLEAR" : "CAUTION"}
+                size="sm"
+                label={currentRun.validation_result.overall_status ?? "PENDING"}
+              />
+            )}
           </div>
         </div>
+
+        {/* Loading / Offline states */}
+        {loading && (
+          <div className="px-4 py-2"><PlanningLoading message="Executing CP-SAT planning pipeline..." /></div>
+        )}
+        {isOffline && (
+          <div className="px-4 py-2">
+            <PlanningEngineOffline runId={currentRun?.planning_run_id} onRetry={refresh} onLoadDemo={resetDemo} />
+          </div>
+        )}
 
         {/* Main 3-Column Split Planning Desk */}
         <div className="flex-1 grid grid-cols-12 min-h-0 overflow-hidden">
@@ -218,10 +239,15 @@ export default function PlanPage() {
 
             {/* Block Schedule Visual Rail */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              {blocks.length === 0 && !loading && (
+                <div className="p-6 text-center text-slate-400 text-xs font-mono">
+                  No blocks scheduled — run planning engine to generate a plan.
+                </div>
+              )}
               {blocks.map((block) => {
                 const isSelected = activeBlock?.block_id === block.block_id;
-                const rawMin = block.duration_minutes || 110;
-                const usableMin = block.usable_minutes_breakdown?.usable_work_minutes || 85;
+                const rawMin = block.duration_minutes;
+                const usableMin = block.usable_minutes_breakdown?.usable_work_minutes ?? (rawMin - 25);
 
                 return (
                   <RailwayBlock
@@ -253,9 +279,9 @@ export default function PlanPage() {
               <span className="font-bold text-slate-900 uppercase">
                 Decision &amp; Sanction
               </span>
-              <span className="text-blue-700 font-bold">
-                {activeBlock?.block_id || "B-014"}
-              </span>
+              {activeBlock && (
+                <span className="text-blue-700 font-bold">{activeBlock.block_id}</span>
+              )}
             </div>
 
             {/* Decision Content */}
@@ -271,7 +297,7 @@ export default function PlanPage() {
                     <div className="text-[11px] text-slate-600 space-y-0.5">
                       <div>Slot: <strong>{activeBlock.start_time} – {activeBlock.end_time}</strong></div>
                       <div>Location: <strong>KM {activeBlock.km_start} – {activeBlock.km_end}</strong></div>
-                      <div>Usable Work: <strong>{activeBlock.usable_minutes_breakdown?.usable_work_minutes || 85} min</strong></div>
+                      <div>Usable Work: <strong>{activeBlock.usable_minutes_breakdown?.usable_work_minutes ?? "—"} min</strong></div>
                     </div>
                   </div>
 

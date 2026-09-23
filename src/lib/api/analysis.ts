@@ -26,7 +26,7 @@ export interface BacktestResult {
     asset_availability_score: number;
     repeated_track_possessions: number;
   };
-  delta: Record<string, any>;
+  delta: Record<string, unknown>;
 }
 
 export async function getComparativeBacktest() {

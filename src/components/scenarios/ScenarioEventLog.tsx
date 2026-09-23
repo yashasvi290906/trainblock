@@ -25,9 +25,9 @@ export function ScenarioEventLog({ events }: ScenarioEventLogProps) {
       </div>
 
       <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
-        {events.map((evt) => (
+        {events.map((evt, idx) => (
           <div
-            key={evt.id}
+            key={`${evt.id || "evt"}-${idx}`}
             className="p-2 rounded bg-slate-950/70 border border-slate-800/80 flex items-start gap-2.5 text-xs text-slate-300 transition-colors hover:border-slate-700"
           >
             <span className="text-[10px] font-bold text-blue-400 whitespace-nowrap pt-0.5">

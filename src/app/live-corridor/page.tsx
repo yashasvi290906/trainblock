@@ -12,6 +12,7 @@ import { AddCriticalWorkModal } from "@/components/corridor/AddCriticalWorkModal
 import { SimTrain } from "@/components/corridor/TrainVisual";
 import { SimSignal } from "@/components/corridor/SignalVisual";
 import { SimBlock } from "@/components/corridor/MaintenanceBlockVisual";
+import { usePlanningRun } from "@/context/PlanningRunContext";
 
 const STATIONS: CorridorStation[] = [
   { id: "SEC", code: "SEC", name: "Secunderabad Jn", km: 40, platforms: 6, tracks: 4 },
@@ -163,6 +164,8 @@ const INITIAL_BLOCK: SimBlock = {
 };
 
 export default function LiveCorridorPage() {
+  const { currentRun, isBackend, denyBlock, addCriticalTask, resetDemo } = usePlanningRun();
+
   // Simulation Controls
   const [isPlaying, setIsPlaying] = useState(true);
   const [playbackSpeed, setPlaybackSpeed] = useState<1 | 2 | 4>(1);
@@ -179,11 +182,53 @@ export default function LiveCorridorPage() {
   // Inspector Selection State
   const [selectedEntity, setSelectedEntity] = useState<{
     type: "TRAIN" | "BLOCK" | "SIGNAL" | "STATION";
-    data: any;
+    data: unknown;
   }>({
     type: "BLOCK",
     data: INITIAL_BLOCK,
   });
+
+  // Sync with active PlanningRun if available
+  useEffect(() => {
+    if (currentRun?.blocks && currentRun.blocks.length > 0) {
+      const firstBlock = currentRun.blocks[0];
+      const deptSet = new Set<string>();
+      firstBlock.tasks?.forEach((t) => {
+        if (t.department) deptSet.add(t.department.toUpperCase());
+      });
+      const depts = deptSet.size > 0 ? Array.from(deptSet) : ["ENGINEERING", "S&T", "TRACTION"];
+      const bTasks = (firstBlock.tasks && firstBlock.tasks.length > 0)
+        ? firstBlock.tasks.map((t, idx) => ({
+            id: t.task_id || `TSK-${idx + 1}`,
+            dept: t.department || "Engineering",
+            desc: t.description || "Track renewal / overhaul",
+            km: `KM ${t.km_start ?? firstBlock.km_start ?? 68}-${t.km_end ?? firstBlock.km_end ?? 94}`,
+          }))
+        : INITIAL_BLOCK.tasks;
+
+      const updatedBlock: SimBlock = {
+        id: firstBlock.block_id || "B-014",
+        name: `Integrated Possession ${firstBlock.block_id || "B-014"}`,
+        startKm: firstBlock.km_start ?? 68,
+        endKm: firstBlock.km_end ?? 94,
+        track: firstBlock.line?.toUpperCase().includes("UP") ? "UP" : "DN",
+        startTime: firstBlock.start_time || "02:20",
+        endTime: firstBlock.end_time || "04:10",
+        durationMin: firstBlock.duration_minutes || 110,
+        usableMin: Math.max(30, (firstBlock.duration_minutes || 110) - 20),
+        status: "PROTECTED",
+        departments: depts,
+        taskCount: bTasks.length,
+        machinery: (firstBlock.machinery && firstBlock.machinery.length > 0)
+          ? firstBlock.machinery
+          : INITIAL_BLOCK.machinery,
+        tasks: bTasks,
+      };
+
+      setBlock(updatedBlock);
+      setSelectedEntity((prev) => (prev.type === "BLOCK" ? { type: "BLOCK", data: updatedBlock } : prev));
+    }
+  }, [currentRun]);
 
   // Event Log
   const [eventLog, setEventLog] = useState<SimEvent[]>([
@@ -300,10 +345,11 @@ export default function LiveCorridorPage() {
   const handleSimulateDenial = () => {
     setIsDenied(true);
     setBlock((b) => ({ ...b, status: "DENIED" }));
+    denyBlock().catch(console.error);
     setEventLog((prev) => [
       {
         time: formatClock(simSeconds),
-        text: "Operating Control: B-014 DENIED in 02:20–04:10 slot",
+        text: "Operating Control: B-014 DENIED in 02:20–04:10 slot (Dispatched to engine)",
         type: "error",
       },
       {
@@ -315,7 +361,7 @@ export default function LiveCorridorPage() {
     ]);
   };
 
-  const handleReplanToFallback = (selectedFallback: any) => {
+  const handleReplanToFallback = (selectedFallback: { startTime: string; endTime: string; durationMin: number; id: string }) => {
     setIsReplanned(true);
     setIsDenied(false);
     setBlock({
@@ -352,6 +398,7 @@ export default function LiveCorridorPage() {
     setTrains(INITIAL_TRAINS);
     setSimSeconds(9102);
     setSelectedEntity({ type: "BLOCK", data: INITIAL_BLOCK });
+    resetDemo().catch(console.error);
     setEventLog((prev) => [
       {
         time: "02:31:42",
@@ -362,12 +409,19 @@ export default function LiveCorridorPage() {
     ]);
   };
 
-  const handleAddCriticalWork = (task: any) => {
+  const handleAddCriticalWork = (task: { id: string; dept: string; desc: string; km: string }) => {
     setBlock((prev) => ({
       ...prev,
       taskCount: prev.taskCount + 1,
       tasks: [task, ...prev.tasks],
     }));
+    addCriticalTask({
+      defect_type: `${task.dept} ${task.desc}`,
+      line: "DOWN",
+      km_start: 73.5,
+      km_end: 74.0,
+      depth_mm: 7.2,
+    }).catch(console.error);
     setEventLog((prev) => [
       {
         time: formatClock(simSeconds),
@@ -376,7 +430,7 @@ export default function LiveCorridorPage() {
       },
       {
         time: formatClock(simSeconds + 1),
-        text: "B-014 work zone re-calculated: 8 tasks co-located inside single possession.",
+        text: "B-014 work zone re-calculated: tasks co-located inside single possession.",
         type: "success",
       },
       ...prev,

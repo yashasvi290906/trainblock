@@ -79,6 +79,17 @@ export const PRIMARY_NAVIGATION: PrimaryNavItem[] = [
     ],
   },
   {
+    key: "rolling",
+    label: "ROLLING",
+    href: "/rolling",
+    icon: "Calendar",
+    description: "26-week rolling maintenance horizon reservation matrix",
+    matchingRoutes: ["/rolling"],
+    subItems: [
+      { label: "Rolling Plan Matrix", href: "/rolling" },
+    ],
+  },
+  {
     key: "reports",
     label: "REPORTS",
     href: "/reports",

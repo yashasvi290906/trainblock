@@ -7,8 +7,8 @@ export interface BackendSolverResult {
   objective_score: number;
   hard_constraints_satisfied: number;
   total_hard_constraints: number;
-  selected_blocks: any[];
-  unassigned_tasks: any[];
+  selected_blocks: unknown[];
+  unassigned_tasks: unknown[];
 }
 
 export async function runPlanningPipeline(timeLimitSec = 10.0) {

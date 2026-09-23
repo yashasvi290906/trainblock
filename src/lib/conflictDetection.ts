@@ -1,5 +1,4 @@
-import { TimetableMovement, Train } from "@/types/railway";
-import { Block, TrainConflict } from "@/types/planning";
+import { TrainConflict } from "@/types/planning";
 
 export interface ConflictResult {
   hasConflict: boolean;
@@ -139,8 +138,8 @@ export function calculateTrainConflicts(
 }
 
 export function calculateFallbackWindows(
-  currentWindow: { start: string; end: string; duration: number },
-  trains: any[]
+  _currentWindow?: { start: string; end: string; duration: number },
+  _trains?: unknown[]
 ) {
   const candidateSlots = [
     { id: "OPT-A", start: "03:10", end: "05:00", duration: 110, compatibility: 91, conflicts: 0, freight: 1, retained: "7/7" },

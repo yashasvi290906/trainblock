@@ -117,7 +117,7 @@ class RailwayPlanningEngine {
   public recordOverride(override: Omit<PlannerOverrideRecord, "id" | "timestamp">): PlannerOverrideRecord {
     const record: PlannerOverrideRecord = {
       ...override,
-      id: `OVR-${Date.now()}`,
+      id: `OVR-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       timestamp: new Date().toISOString(),
     };
     this.overrideRecords.push(record);

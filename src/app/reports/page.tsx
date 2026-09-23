@@ -26,50 +26,29 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 import { usePlanningRun } from "@/context/PlanningRunContext";
+import { PlanningEngineOffline } from "@/components/common/PlanningEngineOffline";
+import { PlanningLoading } from "@/components/common/PlanningLoading";
 import { cn } from "@/lib/utils";
-import { PlannedBlock } from "@/lib/api/runs";
 
 export default function ReportsPage() {
-  const { currentRun, loading, isBackend, resetDemo } = usePlanningRun();
-  const [selectedBlockId, setSelectedBlockId] = useState<string>("BLK-2026-101");
+  const { currentRun, loading, error, isBackend, refresh, resetDemo } = usePlanningRun();
+  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"executive" | "timeline" | "backtest" | "validation" | "traceability">("executive");
-  const [showHowCalculated, setShowHowCalculated] = useState<string | null>(null);
 
-  const summary = currentRun?.input_summary || {
-    total_maintenance_demands: 47,
-    tms_count: 18,
-    smms_count: 14,
-    tdms_count: 15,
-    coa_train_count: 8,
-    goods_count: 3,
-    corridors_count: 6,
-    corridor_coverage: "Secunderabad (SEC, KM 40) -> Nandyal (NDL, KM 120)",
-    data_status: "SYNTHETIC PROTOTYPE DATA"
-  };
+  const isOffline = !loading && (!isBackend || !!error);
 
-  const solver = currentRun?.solver_result || {
-    solver_status: "OPTIMAL",
-    solve_time_ms: 50.14,
-    iterations: 15,
-    objective_score: 1712180.0,
-    selected_blocks: [],
-    unassigned_tasks: []
-  };
-
-  const validation = currentRun?.validation_result || {
-    overall_status: "VALIDATED",
-    passed_checks_count: 8,
-    total_checks_count: 8,
-    checks: []
-  };
-
+  // All values derive from engine — never hardcode operational fallbacks
+  const summary = currentRun?.input_summary;
+  const solver = currentRun?.solver_result;
+  const validation = currentRun?.validation_result;
   const backtest = currentRun?.backtest_result;
+  const weeklyBlocks = currentRun?.weekly_plan ?? [];
+  const selectedBlock = weeklyBlocks.find((b) => b.block_id === selectedBlockId) ?? weeklyBlocks[0] ?? null;
 
-  const weeklyBlocks = currentRun?.weekly_plan || [];
-  const selectedBlock = weeklyBlocks.find((b) => b.block_id === selectedBlockId) || weeklyBlocks[0] || null;
-
-  const p1Tasks = currentRun?.prioritized_tasks.filter((t) => t.safety_tier === "P1") || [];
-  const assignedP1Count = p1Tasks.filter((t) => weeklyBlocks.some((b) => b.tasks.some((bt) => bt.task_id === t.task_id))).length;
+  const p1Tasks = currentRun?.prioritized_tasks?.filter((t) => t.safety_tier === "P1") ?? [];
+  const assignedP1Count = p1Tasks.filter((t) =>
+    weeklyBlocks.some((b) => b.tasks?.some((bt) => bt.task_id === t.task_id))
+  ).length;
 
   return (
     <AppShell>
@@ -109,7 +88,14 @@ export default function ReportsPage() {
           </div>
         </div>
 
+        {/* Loading / Offline states */}
+        {loading && <PlanningLoading message="Loading planning evidence..." />}
+        {isOffline && (
+          <PlanningEngineOffline runId={currentRun?.planning_run_id} onRetry={refresh} onLoadDemo={resetDemo} />
+        )}
+
         {/* Compact Planning Run Strip */}
+        {currentRun && (
         <div className="bg-white border border-slate-200 rounded-xl p-3 px-4 shadow-xs flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
@@ -126,14 +112,14 @@ export default function ReportsPage() {
             <span className="text-slate-300">|</span>
             <div className="flex items-center gap-2">
               <span className="text-slate-400">SOLVER:</span>
-              <strong className="text-blue-700">CP-SAT / {solver.solver_status} ({solver.solve_time_ms.toFixed(1)}ms)</strong>
+              <strong className="text-blue-700">CP-SAT / {solver?.solver_status ?? "—"} ({solver ? solver.solve_time_ms.toFixed(1) : "—"}ms)</strong>
             </div>
             <span className="text-slate-300">|</span>
             <div className="flex items-center gap-2">
               <span className="text-slate-400">VALIDATION:</span>
               <span className="text-emerald-700 font-bold flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                {validation.overall_status} ({validation.passed_checks_count}/8 RULES)
+                {validation?.overall_status ?? "—"} ({validation?.passed_checks_count ?? 0}/8 RULES)
               </span>
             </div>
           </div>
@@ -142,6 +128,7 @@ export default function ReportsPage() {
             <span>Corridor: Secunderabad – Nandyal (80 km)</span>
           </div>
         </div>
+        )}
 
         {/* Navigation Tabs */}
         <div className="flex border-b border-slate-200 gap-2 text-xs font-semibold">
@@ -174,14 +161,14 @@ export default function ReportsPage() {
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs space-y-1">
                 <span className="text-[11px] font-mono text-slate-500 uppercase">1. Maintenance Demands</span>
-                <div className="text-2xl font-bold font-mono text-slate-900">{summary.total_maintenance_demands}</div>
-                <div className="text-[11px] text-slate-500">TMS (18) + SMMS (14) + TDMS (15)</div>
+                <div className="text-2xl font-bold font-mono text-slate-900">{summary?.total_maintenance_demands ?? "—"}</div>
+                <div className="text-[11px] text-slate-500">TMS ({summary?.tms_count ?? "—"}) + SMMS ({summary?.smms_count ?? "—"}) + TDMS ({summary?.tdms_count ?? "—"})</div>
                 <div className="text-[9px] font-mono text-blue-700 pt-1">CALCULATED FROM INGESTION</div>
               </div>
 
               <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs space-y-1">
                 <span className="text-[11px] font-mono text-slate-500 uppercase">2. Composed Clusters</span>
-                <div className="text-2xl font-bold font-mono text-blue-800">{currentRun?.composition_clusters.length || 14}</div>
+                <div className="text-2xl font-bold font-mono text-blue-800">{currentRun?.composition_clusters?.length ?? "—"}</div>
                 <div className="text-[11px] text-slate-500">≤ 3.0 km spatial grouping</div>
                 <div className="text-[9px] font-mono text-blue-700 pt-1">CALCULATED FROM COMPOSER</div>
               </div>
@@ -195,14 +182,16 @@ export default function ReportsPage() {
 
               <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs space-y-1">
                 <span className="text-[11px] font-mono text-slate-500 uppercase">4. Deferred Lower-Urgency</span>
-                <div className="text-2xl font-bold font-mono text-amber-700">{solver.unassigned_tasks?.length || 21}</div>
+                <div className="text-2xl font-bold font-mono text-amber-700">{solver?.unassigned_tasks?.length ?? "—"}</div>
                 <div className="text-[11px] text-slate-500">P3/P4 deferred work</div>
                 <div className="text-[9px] font-mono text-blue-700 pt-1">SECTION CAPACITY CAP (240m)</div>
               </div>
 
               <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs space-y-1">
                 <span className="text-[11px] font-mono text-slate-500 uppercase">5. Critical P1 Coverage</span>
-                <div className="text-2xl font-bold font-mono text-emerald-700">100.0%</div>
+                <div className="text-2xl font-bold font-mono text-emerald-700">
+                  {p1Tasks.length > 0 ? `${Math.round((assignedP1Count / p1Tasks.length) * 100)}%` : "—"}
+                </div>
                 <div className="text-[11px] text-slate-500">{assignedP1Count} / {p1Tasks.length} P1 tasks assigned</div>
                 <div className="text-[9px] font-mono text-blue-700 pt-1">MANDATORY INVARIANCE</div>
               </div>
@@ -251,19 +240,19 @@ export default function ReportsPage() {
                   </div>
                   <div className="flex justify-between py-1.5 border-b border-slate-100">
                     <span className="text-slate-500">Solver Status:</span>
-                    <span className="font-bold text-emerald-700">{solver.solver_status}</span>
+                    <span className="font-bold text-emerald-700">{solver?.solver_status ?? "FEASIBLE"}</span>
                   </div>
                   <div className="flex justify-between py-1.5 border-b border-slate-100">
                     <span className="text-slate-500">Execution Wall Time:</span>
-                    <span className="font-semibold text-slate-900">{solver.solve_time_ms.toFixed(2)} ms</span>
+                    <span className="font-semibold text-slate-900">{solver ? `${solver.solve_time_ms.toFixed(2)} ms` : "—"}</span>
                   </div>
                   <div className="flex justify-between py-1.5 border-b border-slate-100">
                     <span className="text-slate-500">Search Branches / Iterations:</span>
-                    <span className="font-semibold text-slate-900">{solver.iterations}</span>
+                    <span className="font-semibold text-slate-900">{solver?.iterations ?? "—"}</span>
                   </div>
                   <div className="flex justify-between py-1.5 border-b border-slate-100">
                     <span className="text-slate-500">Objective Utility Score:</span>
-                    <span className="font-bold text-blue-900">{solver.objective_score.toLocaleString()}</span>
+                    <span className="font-bold text-blue-900">{solver ? solver.objective_score.toLocaleString() : "—"}</span>
                   </div>
                   <div className="flex justify-between py-1.5">
                     <span className="text-slate-500">Hard Invariants Enforced:</span>

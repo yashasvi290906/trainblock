@@ -24,7 +24,8 @@ export async function fetchApi<T>(endpoint: string, options?: RequestInit): Prom
 
     const data = await res.json();
     return { data, error: null, isBackend: true };
-  } catch (err: any) {
-    return { data: null, error: err?.message || 'Backend connection offline', isBackend: false };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Backend connection offline';
+    return { data: null, error: message, isBackend: false };
   }
 }

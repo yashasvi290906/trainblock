@@ -13,25 +13,25 @@ export async function getInputsSummary() {
 }
 
 export async function getTmsDefects() {
-  return fetchApi<any[]>('/inputs/tms');
+  return fetchApi<unknown[]>('/inputs/tms');
 }
 
 export async function getSmmsWork() {
-  return fetchApi<any[]>('/inputs/smms');
+  return fetchApi<unknown[]>('/inputs/smms');
 }
 
 export async function getTdmsWork() {
-  return fetchApi<any[]>('/inputs/tdms');
+  return fetchApi<unknown[]>('/inputs/tdms');
 }
 
 export async function getCoaTimetable() {
-  return fetchApi<any[]>('/inputs/coa');
+  return fetchApi<unknown[]>('/inputs/coa');
 }
 
 export async function getGoodsForecasts() {
-  return fetchApi<any[]>('/inputs/goods');
+  return fetchApi<unknown[]>('/inputs/goods');
 }
 
 export async function getBlockCorridors() {
-  return fetchApi<any[]>('/inputs/corridors');
+  return fetchApi<unknown[]>('/inputs/corridors');
 }

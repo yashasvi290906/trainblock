@@ -13,6 +13,14 @@ import {
   PlannerOverrideRequest
 } from '@/lib/api/runs';
 
+export interface AddCriticalTaskData {
+  defect_type?: string;
+  line?: string;
+  km_start?: number;
+  km_end?: number;
+  depth_mm?: number;
+}
+
 interface PlanningRunContextType {
   currentRun: PlanningRun | null;
   loading: boolean;
@@ -21,7 +29,7 @@ interface PlanningRunContextType {
   resetDemo: () => Promise<void>;
   replan: () => Promise<void>;
   denyBlock: (blockId: string) => Promise<void>;
-  addCriticalTask: (data?: any) => Promise<void>;
+  addCriticalTask: (data?: AddCriticalTaskData) => Promise<void>;
   approveCurrentPlan: (name?: string, role?: string) => Promise<void>;
   overrideCurrentPlan: (request: PlannerOverrideRequest) => Promise<void>;
   refresh: () => Promise<void>;
@@ -50,6 +58,7 @@ export function PlanningRunProvider({ children }: { children: React.ReactNode })
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     fetchRun();
   }, [fetchRun]);
 
@@ -86,7 +95,7 @@ export function PlanningRunProvider({ children }: { children: React.ReactNode })
     setLoading(false);
   };
 
-  const addCriticalTask = async (data?: any) => {
+  const addCriticalTask = async (data?: AddCriticalTaskData) => {
     setLoading(true);
     const res = await scenarioAddCriticalTask(data || {
       defect_type: 'Severe Rail Joint Fracture (USFD Depth 7.2mm)',
