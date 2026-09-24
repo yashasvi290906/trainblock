@@ -52,12 +52,12 @@ export function RailwayCanvas({
   const isOheUnderMaintenance = !isDenied && block.status === "PROTECTED";
 
   return (
-    <div className="flex-1 relative overflow-hidden flex flex-col justify-center px-4 sm:px-6 py-4 select-none bg-[#050b17]">
+    <div className="flex-1 relative overflow-hidden flex flex-col justify-center px-4 sm:px-6 py-4 select-none bg-slate-100 dark:bg-[#050b17] transition-colors">
       {/* Subtle Background Radial Depth */}
-      <div className="absolute inset-0 bg-radial-at-c from-[#081329] via-[#050b17] to-[#030710] pointer-events-none" />
+      <div className="absolute inset-0 bg-radial-at-c from-slate-200/50 via-slate-100 to-slate-200/30 dark:from-[#081329] dark:via-[#050b17] dark:to-[#030710] pointer-events-none" />
 
       {/* KM Marker Ruler & Stations Axis */}
-      <div className="relative w-full h-10 flex items-end border-b border-[#142340] mb-3">
+      <div className="relative w-full h-10 flex items-end border-b border-slate-300 dark:border-[#142340] mb-3">
         {/* Stations Markers */}
         {stations.map((stn) => {
           if (stn.km < kmBounds.min || stn.km > kmBounds.max) return null;
@@ -78,14 +78,14 @@ export function RailwayCanvas({
                 className={cn(
                   "flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono font-bold shadow-md transition-colors",
                   isSelected
-                    ? "bg-blue-600 text-white ring-2 ring-sky-300"
-                    : "bg-slate-900 border border-slate-700 text-slate-200 group-hover:border-slate-400"
+                    ? "bg-blue-600 text-white ring-2 ring-sky-400"
+                    : "bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 group-hover:border-slate-500 dark:group-hover:border-slate-400"
                 )}
               >
-                <MapPin className="w-2.5 h-2.5 text-sky-400" />
+                <MapPin className="w-2.5 h-2.5 text-sky-600 dark:text-sky-400" />
                 <span>{stn.code}</span>
               </div>
-              <span className="text-[8.5px] font-mono text-slate-400">KM {stn.km}</span>
+              <span className="text-[8.5px] font-mono text-slate-500 dark:text-slate-400">KM {stn.km}</span>
               <div className="w-0.5 h-2 bg-blue-500/60" />
             </div>
           );
@@ -102,64 +102,64 @@ export function RailwayCanvas({
               className="absolute -bottom-1 flex flex-col items-center transform -translate-x-1/2 pointer-events-none opacity-40"
               style={{ left: `${pct}%` }}
             >
-              <div className="w-0.5 h-1.5 bg-slate-600" />
+              <div className="w-0.5 h-1.5 bg-slate-400 dark:bg-slate-600" />
             </div>
           );
         })}
       </div>
 
       {/* THE MAIN PHYSICAL RAILWAY TRACK ENVIRONMENT */}
-      <div className="relative w-full h-[380px] bg-[#081122]/80 border border-[#162747] rounded-xl p-4 flex flex-col justify-between shadow-2xl backdrop-blur-sm">
+      <div className="relative w-full h-[380px] bg-white/90 dark:bg-[#081122]/80 border border-slate-200 dark:border-[#162747] rounded-xl p-4 flex flex-col justify-between shadow-xl dark:shadow-2xl backdrop-blur-sm transition-colors">
         {/* Overhead Electrification (OHE) Catenary Structure Line */}
-        <div className="relative h-6 flex items-center justify-between border-b border-dashed border-sky-400/20 px-2 pointer-events-none">
+        <div className="relative h-6 flex items-center justify-between border-b border-dashed border-sky-600/20 dark:border-sky-400/20 px-2 pointer-events-none">
           {Array.from({ length: 18 }).map((_, idx) => (
             <div key={idx} className="relative flex flex-col items-center">
               {/* OHE Steel Mast */}
               <div
                 className={cn(
                   "w-1 h-5 rounded-t transition-colors",
-                  isOheUnderMaintenance && idx >= 7 && idx <= 13 ? "bg-amber-400/80" : "bg-slate-500/50"
+                  isOheUnderMaintenance && idx >= 7 && idx <= 13 ? "bg-amber-400/80" : "bg-slate-400 dark:bg-slate-500/50"
                 )}
               />
               {/* Insulator */}
               <div
                 className={cn(
                   "w-2 h-1 -mt-4 rounded-xs transition-colors",
-                  isOheUnderMaintenance && idx >= 7 && idx <= 13 ? "bg-amber-300 shadow-[0_0_6px_#f59e0b]" : "bg-sky-400/60"
+                  isOheUnderMaintenance && idx >= 7 && idx <= 13 ? "bg-amber-500 dark:bg-amber-300 shadow-[0_0_6px_#f59e0b]" : "bg-sky-600 dark:bg-sky-400/60"
                 )}
               />
             </div>
           ))}
-          <span className="absolute left-2 top-0.5 text-[8.5px] font-mono text-sky-400/70 font-bold">
+          <span className="absolute left-2 top-0.5 text-[8.5px] font-mono text-sky-700 dark:text-sky-400/70 font-bold">
             25kV AC TRACTION OHE CATENARY
           </span>
         </div>
 
         {/* ----------------- UP TRACK (Towards Secunderabad, KM 120 -> 40) ----------------- */}
         <div className="relative h-28 flex flex-col justify-center">
-          <div className="absolute left-2 top-0 text-[10px] font-mono text-emerald-400/80 font-bold tracking-widest flex items-center gap-1.5">
+          <div className="absolute left-2 top-0 text-[10px] font-mono text-emerald-700 dark:text-emerald-400/80 font-bold tracking-widest flex items-center gap-1.5">
             <span>← UP LINE (WESTBOUND · TOWARDS SECUNDERABAD)</span>
-            <span className="px-1.5 py-0.2 bg-emerald-500/10 text-emerald-400 rounded text-[9px] border border-emerald-500/20">
+            <span className="px-1.5 py-0.2 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 rounded text-[9px] border border-emerald-500/30 dark:border-emerald-500/20">
               MAX 130 KM/H · PERMITTED
             </span>
           </div>
 
           {/* Track Geometry: Ballast bed, Sleepers, Steel Rails */}
-          <div className="relative w-full h-14 bg-[#1b2332] rounded-md border-y border-[#2d3b55] flex items-center overflow-hidden shadow-inner">
+          <div className="relative w-full h-14 bg-slate-200 dark:bg-[#1b2332] rounded-md border-y border-slate-300 dark:border-[#2d3b55] flex items-center overflow-hidden shadow-inner">
             {/* Ballast Texture & Sleepers (Ties) Pattern */}
             <div
               className="absolute inset-0 opacity-40 pointer-events-none"
               style={{
                 backgroundImage:
-                  "repeating-linear-gradient(90deg, #101827, #101827 8px, #374151 8px, #374151 14px)",
+                  "repeating-linear-gradient(90deg, var(--rb-track-secondary, #334155), var(--rb-track-secondary, #334155) 8px, var(--rb-track, #64748b) 8px, var(--rb-track, #64748b) 14px)",
               }}
             />
             {/* Centerline */}
-            <div className="absolute inset-x-0 h-0.5 bg-slate-700/50 pointer-events-none" />
+            <div className="absolute inset-x-0 h-0.5 bg-slate-400 dark:bg-slate-700/50 pointer-events-none" />
             {/* Rail 1 (Top Steel Line) */}
-            <div className="absolute top-2.5 inset-x-0 h-1 bg-gradient-to-r from-slate-400 via-slate-100 to-slate-400 shadow-[0_0_4px_rgba(255,255,255,0.4)] pointer-events-none" />
+            <div className="absolute top-2.5 inset-x-0 h-1 bg-gradient-to-r from-slate-400 via-slate-600 to-slate-400 dark:from-slate-400 dark:via-slate-100 dark:to-slate-400 shadow-[0_0_4px_rgba(0,0,0,0.2)] dark:shadow-[0_0_4px_rgba(255,255,255,0.4)] pointer-events-none" />
             {/* Rail 2 (Bottom Steel Line) */}
-            <div className="absolute bottom-2.5 inset-x-0 h-1 bg-gradient-to-r from-slate-400 via-slate-100 to-slate-400 shadow-[0_0_4px_rgba(255,255,255,0.4)] pointer-events-none" />
+            <div className="absolute bottom-2.5 inset-x-0 h-1 bg-gradient-to-r from-slate-400 via-slate-600 to-slate-400 dark:from-slate-400 dark:via-slate-100 dark:to-slate-400 shadow-[0_0_4px_rgba(0,0,0,0.2)] dark:shadow-[0_0_4px_rgba(255,255,255,0.4)] pointer-events-none" />
 
             {/* Moving Trains on UP Track */}
             {trains
@@ -211,29 +211,29 @@ export function RailwayCanvas({
 
         {/* ----------------- DOWN TRACK (Towards Nandyal, KM 40 -> 120) ----------------- */}
         <div className="relative h-28 flex flex-col justify-center">
-          <div className="absolute left-2 top-0 text-[10px] font-mono text-sky-400/80 font-bold tracking-widest flex items-center gap-1.5">
+          <div className="absolute left-2 top-0 text-[10px] font-mono text-sky-700 dark:text-sky-400/80 font-bold tracking-widest flex items-center gap-1.5">
             <span>→ DOWN LINE (EASTBOUND · TOWARDS NANDYAL)</span>
-            <span className="px-1.5 py-0.2 bg-amber-500/10 text-amber-300 rounded text-[9px] border border-amber-500/20">
+            <span className="px-1.5 py-0.2 bg-amber-500/10 text-amber-700 dark:text-amber-300 rounded text-[9px] border border-amber-500/30 dark:border-amber-500/20">
               {block.status === "PROTECTED" ? "POSSESSION B-014 ACTIVE (KM 68–94)" : "NORMAL CAPACITY"}
             </span>
           </div>
 
           {/* Track Geometry: Ballast bed, Sleepers, Steel Rails */}
-          <div className="relative w-full h-14 bg-[#1b2332] rounded-md border-y border-[#2d3b55] flex items-center overflow-hidden shadow-inner">
+          <div className="relative w-full h-14 bg-slate-200 dark:bg-[#1b2332] rounded-md border-y border-slate-300 dark:border-[#2d3b55] flex items-center overflow-hidden shadow-inner">
             {/* Ballast Texture & Sleepers Pattern */}
             <div
               className="absolute inset-0 opacity-40 pointer-events-none"
               style={{
                 backgroundImage:
-                  "repeating-linear-gradient(90deg, #101827, #101827 8px, #374151 8px, #374151 14px)",
+                  "repeating-linear-gradient(90deg, var(--rb-track-secondary, #334155), var(--rb-track-secondary, #334155) 8px, var(--rb-track, #64748b) 8px, var(--rb-track, #64748b) 14px)",
               }}
             />
             {/* Centerline */}
-            <div className="absolute inset-x-0 h-0.5 bg-slate-700/50 pointer-events-none" />
+            <div className="absolute inset-x-0 h-0.5 bg-slate-400 dark:bg-slate-700/50 pointer-events-none" />
             {/* Rail 1 (Top Steel Line) */}
-            <div className="absolute top-2.5 inset-x-0 h-1 bg-gradient-to-r from-slate-400 via-slate-100 to-slate-400 shadow-[0_0_4px_rgba(255,255,255,0.4)] pointer-events-none" />
+            <div className="absolute top-2.5 inset-x-0 h-1 bg-gradient-to-r from-slate-400 via-slate-600 to-slate-400 dark:from-slate-400 dark:via-slate-100 dark:to-slate-400 shadow-[0_0_4px_rgba(0,0,0,0.2)] dark:shadow-[0_0_4px_rgba(255,255,255,0.4)] pointer-events-none" />
             {/* Rail 2 (Bottom Steel Line) */}
-            <div className="absolute bottom-2.5 inset-x-0 h-1 bg-gradient-to-r from-slate-400 via-slate-100 to-slate-400 shadow-[0_0_4px_rgba(255,255,255,0.4)] pointer-events-none" />
+            <div className="absolute bottom-2.5 inset-x-0 h-1 bg-gradient-to-r from-slate-400 via-slate-600 to-slate-400 dark:from-slate-400 dark:via-slate-100 dark:to-slate-400 shadow-[0_0_4px_rgba(0,0,0,0.2)] dark:shadow-[0_0_4px_rgba(255,255,255,0.4)] pointer-events-none" />
 
             {/* PHYSICAL MAINTENANCE BLOCK B-014 (KM 68 - 94) */}
             <MaintenanceBlockVisual

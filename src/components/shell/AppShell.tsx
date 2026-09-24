@@ -69,7 +69,7 @@ export function AppShell({ children }: AppShellProps) {
       />
 
       {/* 2. Primary Horizontal Navigation Bar */}
-      <nav className="bg-[#0B0F19]/95 backdrop-blur-md border-b border-white/10 px-4 sm:px-6 shrink-0 z-20">
+      <nav className="bg-slate-50/95 dark:bg-[#0B0F19]/95 backdrop-blur-md border-b border-slate-200 dark:border-white/10 px-4 sm:px-6 shrink-0 z-20 transition-colors duration-200">
         <div className="flex items-center justify-between h-11">
           {/* Main Workstation Modules */}
           <div className="flex items-center space-x-1 sm:space-x-2 overflow-x-auto scrollbar-none">
@@ -86,7 +86,7 @@ export function AppShell({ children }: AppShellProps) {
                     "px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold tracking-tight transition-all flex items-center gap-1.5 whitespace-nowrap",
                     isItemActive
                       ? "bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-xs"
-                      : "text-slate-300 hover:text-orange-400 hover:bg-white/5"
+                      : "text-slate-600 dark:text-slate-300 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-slate-200/60 dark:hover:bg-white/5"
                   )}
                 >
                   <span>{item.label}</span>
@@ -97,7 +97,7 @@ export function AppShell({ children }: AppShellProps) {
 
           {/* Sub-Items Contextual Tabs */}
           {activeSection?.subItems && activeSection.subItems.length > 0 && (
-            <div className="hidden lg:flex items-center gap-1 text-xs border-l border-white/10 pl-3">
+            <div className="hidden lg:flex items-center gap-1 text-xs border-l border-slate-200 dark:border-white/10 pl-3">
               <span className="text-[10px] font-mono text-slate-500 uppercase font-semibold mr-1">
                 Views:
               </span>
@@ -110,8 +110,8 @@ export function AppShell({ children }: AppShellProps) {
                     className={cn(
                       "px-2.5 py-1 rounded-md text-[11px] font-mono transition-colors",
                       isSubActive
-                        ? "bg-orange-500/15 text-orange-300 font-bold border border-orange-500/30"
-                        : "text-slate-400 hover:text-white hover:bg-white/5"
+                        ? "bg-orange-500/15 text-orange-600 dark:text-orange-300 font-bold border border-orange-500/30"
+                        : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/5"
                     )}
                   >
                     {sub.label}
@@ -130,12 +130,12 @@ export function AppShell({ children }: AppShellProps) {
             className="fixed inset-0 bg-black/50 backdrop-blur-xs"
             onClick={() => setIsMobileMenuOpen(false)}
           />
-          <div className="relative z-10 w-64 h-full bg-slate-900 text-white p-4 space-y-4 font-mono text-xs">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <span className="font-bold text-white text-sm">RAILBLOCK WORKSTATION</span>
+          <div className="relative z-10 w-64 h-full bg-white dark:bg-slate-900 text-slate-900 dark:text-white p-4 space-y-4 font-mono text-xs border-r border-slate-200 dark:border-slate-800 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+              <span className="font-bold text-slate-900 dark:text-white text-sm">RAILBLOCK WORKSTATION</span>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-slate-400 hover:text-white"
+                className="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white p-1"
               >
                 ✕
               </button>
@@ -147,10 +147,10 @@ export function AppShell({ children }: AppShellProps) {
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(
-                    "block px-3 py-2 rounded text-xs font-semibold",
+                    "block px-3 py-2 rounded text-xs font-semibold transition-colors",
                     activeSection.key === item.key
                       ? "bg-blue-600 text-white"
-                      : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                      : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white"
                   )}
                 >
                   {item.label}
@@ -162,7 +162,7 @@ export function AppShell({ children }: AppShellProps) {
       )}
 
       {/* 3. Main Operational Content Workspace */}
-      <main className="flex-1 min-w-0 overflow-y-auto bg-slate-50">
+      <main className="flex-1 min-w-0 overflow-y-auto bg-slate-50 dark:bg-[#070A12] text-slate-900 dark:text-slate-100 transition-colors">
         {children}
       </main>
     </div>

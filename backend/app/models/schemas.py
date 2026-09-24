@@ -213,6 +213,8 @@ class SolverResult(BaseModel):
     objective_score: float
     hard_constraints_satisfied: int
     total_hard_constraints: int
+    model_variable_count: int = 0
+    model_constraint_count: int = 0
     selected_blocks: List[PlannedBlock]
     unassigned_tasks: List[NormalizedTask]
 
@@ -227,6 +229,10 @@ class ValidationCheck(BaseModel):
     passed: bool
     severity: Literal["CRITICAL", "WARNING", "INFO"]
     details: str
+    actual_value: Optional[str] = None
+    threshold: Optional[str] = None
+    evidence: Optional[str] = None
+    affected_items: Optional[List[str]] = None
 
 class ValidationReport(BaseModel):
     overall_status: Literal["VALIDATED", "FAILED", "WARNING"]
@@ -250,6 +256,17 @@ class BacktestResult(BaseModel):
     dataset_name: str
     total_input_work_orders: int
     corridor_length_km: float
+    horizon_days: int = 7
+    section_count: int = 6
+    total_modeled_section_minutes: float = 60480.0
+    baseline_blocked_minutes: int = 0
+    integrated_blocked_minutes: int = 0
+    blocked_minutes_reduction: int = 0
+    blocked_minutes_reduction_percent: float = 0.0
+    modeled_corridor_availability: float = 0.0
+    baseline_modeled_corridor_availability: float = 0.0
+    metric_definition: str = "Modeled Corridor Availability: Percentage of modeled section-time not occupied by maintenance possessions over the evaluated horizon."
+    data_status: str = "SYNTHETIC_MODEL_EVALUATED"
     siloed_baseline: BacktestMetrics
     integrated_railblock: BacktestMetrics
     delta: Dict[str, Any]

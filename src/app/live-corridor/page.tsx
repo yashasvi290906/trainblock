@@ -454,7 +454,7 @@ export default function LiveCorridorPage() {
         {/* 2. MAIN SIMULATION VIEWPORT: 75% RAILWAY CANVAS + 25% INSPECTOR */}
         <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
           {/* Left / Center 75%: The Physical 2D/2.5D Railway Corridor Scene */}
-          <div className="flex-1 flex flex-col min-w-0 bg-[#050b17] relative">
+          <div className="flex-1 flex flex-col min-w-0 bg-slate-100 dark:bg-[#050b17] relative transition-colors">
             <RailwayCanvas
               stations={STATIONS}
               trains={trains}

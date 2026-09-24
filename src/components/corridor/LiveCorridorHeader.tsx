@@ -12,6 +12,7 @@ import {
   ArrowRight,
   Layers,
   Sparkles,
+  Activity,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
@@ -188,10 +189,20 @@ export function LiveCorridorHeader({
           <span>+ Add Critical Work</span>
         </button>
 
+        {/* Marey Diagram Direct View Button */}
+        <Link
+          href="/time-distance"
+          className="px-3 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 dark:bg-sky-950/70 dark:hover:bg-sky-900 text-sky-800 dark:text-sky-300 border border-sky-300 dark:border-sky-800 font-mono text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
+          title="Open Marey Time–Distance Diagram"
+        >
+          <Activity className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
+          <span>MAREY DIAGRAM</span>
+        </Link>
+
         {/* Link to /plan */}
         <Link
           href="/plan"
-          className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs font-bold transition-colors flex items-center gap-1 shadow-sm"
+          className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs font-bold transition-colors flex items-center gap-1 shadow-sm active:scale-95"
         >
           <span>View Plan</span>
           <ArrowRight className="w-3.5 h-3.5" />

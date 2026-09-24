@@ -356,7 +356,7 @@ export default function TimeDistancePage() {
 
   return (
     <AppShell>
-      <div className="flex flex-col min-h-[calc(100vh-64px)] bg-[#050b17] text-slate-100 select-none pb-12">
+      <div className="flex flex-col min-h-[calc(100vh-64px)] bg-slate-100 dark:bg-[#050b17] text-slate-900 dark:text-slate-100 select-none pb-12 transition-colors">
         {/* 1. TOP HEADER */}
         <TimeDistanceHeader
           conflictCount={calculatedConflicts.length}

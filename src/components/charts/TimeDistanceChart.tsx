@@ -83,13 +83,13 @@ export function TimeDistanceChart({
   };
 
   return (
-    <div className={cn("bg-[#0c1527] border border-[#1a2948] rounded-lg p-4 flex flex-col space-y-3", className)}>
+    <div className={cn("bg-white dark:bg-[#0c1527] border border-slate-200 dark:border-[#1a2948] rounded-lg p-4 flex flex-col space-y-3 transition-colors", className)}>
       {/* Controls toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#16233d]">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-[#16233d]">
         <div className="flex items-center gap-3">
-          <h3 className="text-xs font-semibold text-white tracking-wide flex items-center gap-2">
+          <h3 className="text-xs font-semibold text-slate-900 dark:text-white tracking-wide flex items-center gap-2">
             <span>Time–Distance (Marey) Diagram</span>
-            <span className="text-[10px] font-mono text-sky-400 bg-sky-950/60 border border-sky-800/50 px-2 py-0.5 rounded">
+            <span className="text-[10px] font-mono text-sky-700 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-800/50 px-2 py-0.5 rounded">
               SEC – NDL (21 Sep 2026)
             </span>
           </h3>
@@ -98,31 +98,31 @@ export function TimeDistanceChart({
         {/* Filter toggles & Zoom */}
         <div className="flex items-center gap-4 text-xs">
           {/* Toggle buttons */}
-          <div className="flex items-center gap-3 bg-[#080f1d] px-3 py-1.5 rounded border border-[#16243f]">
+          <div className="flex items-center gap-3 bg-slate-100 dark:bg-[#080f1d] px-3 py-1.5 rounded border border-slate-300 dark:border-[#16243f]">
             <button
               onClick={() => setShowTrains(!showTrains)}
-              className={cn("flex items-center gap-1.5 transition-colors", showTrains ? "text-sky-400" : "text-slate-500")}
+              className={cn("flex items-center gap-1.5 transition-colors", showTrains ? "text-sky-600 dark:text-sky-400 font-semibold" : "text-slate-400 dark:text-slate-500")}
             >
               {showTrains ? <CheckSquare className="w-3.5 h-3.5" /> : <Square className="w-3.5 h-3.5" />}
               <span>Trains</span>
             </button>
             <button
               onClick={() => setShowBlocks(!showBlocks)}
-              className={cn("flex items-center gap-1.5 transition-colors", showBlocks ? "text-amber-400" : "text-slate-500")}
+              className={cn("flex items-center gap-1.5 transition-colors", showBlocks ? "text-amber-600 dark:text-amber-400 font-semibold" : "text-slate-400 dark:text-slate-500")}
             >
               {showBlocks ? <CheckSquare className="w-3.5 h-3.5" /> : <Square className="w-3.5 h-3.5" />}
               <span>Blocks</span>
             </button>
             <button
               onClick={() => setShowSignals(!showSignals)}
-              className={cn("flex items-center gap-1.5 transition-colors", showSignals ? "text-emerald-400" : "text-slate-500")}
+              className={cn("flex items-center gap-1.5 transition-colors", showSignals ? "text-emerald-600 dark:text-emerald-400 font-semibold" : "text-slate-400 dark:text-slate-500")}
             >
               {showSignals ? <CheckSquare className="w-3.5 h-3.5" /> : <Square className="w-3.5 h-3.5" />}
               <span>Signals</span>
             </button>
             <button
               onClick={() => setShowOhe(!showOhe)}
-              className={cn("flex items-center gap-1.5 transition-colors", showOhe ? "text-indigo-400" : "text-slate-500")}
+              className={cn("flex items-center gap-1.5 transition-colors", showOhe ? "text-indigo-600 dark:text-indigo-400 font-semibold" : "text-slate-400 dark:text-slate-500")}
             >
               {showOhe ? <CheckSquare className="w-3.5 h-3.5" /> : <Square className="w-3.5 h-3.5" />}
               <span>OHE</span>
@@ -130,25 +130,25 @@ export function TimeDistanceChart({
           </div>
 
           {/* Zoom controls */}
-          <div className="flex items-center gap-1 bg-[#080f1d] p-1 rounded border border-[#16243f]">
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-[#080f1d] p-1 rounded border border-slate-300 dark:border-[#16243f]">
             <button
               onClick={() => setZoomLevel((z) => Math.max(1, z - 0.25))}
-              className="p-1 hover:bg-[#162440] rounded text-slate-300"
+              className="p-1 hover:bg-slate-200 dark:hover:bg-[#162440] rounded text-slate-700 dark:text-slate-300 transition-colors"
               title="Zoom Out"
             >
               <ZoomOut className="w-3.5 h-3.5" />
             </button>
-            <span className="mono-num text-[11px] px-1 text-slate-400">{Math.round(zoomLevel * 100)}%</span>
+            <span className="mono-num text-[11px] px-1 text-slate-600 dark:text-slate-400">{Math.round(zoomLevel * 100)}%</span>
             <button
               onClick={() => setZoomLevel((z) => Math.min(2, z + 0.25))}
-              className="p-1 hover:bg-[#162440] rounded text-slate-300"
+              className="p-1 hover:bg-slate-200 dark:hover:bg-[#162440] rounded text-slate-700 dark:text-slate-300 transition-colors"
               title="Zoom In"
             >
               <ZoomIn className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={() => setZoomLevel(1)}
-              className="p-1 hover:bg-[#162440] rounded text-slate-400 hover:text-white"
+              className="p-1 hover:bg-slate-200 dark:hover:bg-[#162440] rounded text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
               title="Reset Zoom"
             >
               <RotateCcw className="w-3 h-3" />
@@ -158,7 +158,7 @@ export function TimeDistanceChart({
       </div>
 
       {/* SVG Container with horizontal scroll */}
-      <div className="overflow-x-auto bg-[#070e1c] rounded-lg border border-[#14233e] p-2 relative">
+      <div className="overflow-x-auto bg-slate-50 dark:bg-[#070e1c] rounded-lg border border-slate-200 dark:border-[#14233e] p-2 relative transition-colors">
         <svg
           viewBox={`0 0 ${svgWidth} ${svgHeight}`}
           className="w-full h-auto min-w-[800px]"
@@ -185,16 +185,14 @@ export function TimeDistanceChart({
                   y1={paddingTop}
                   x2={x}
                   y2={paddingTop + chartHeight}
-                  stroke="#172744"
+                  className="stroke-slate-300 dark:stroke-[#172744]"
                   strokeDasharray="3 3"
                   strokeWidth="1"
                 />
                 <text
                   x={x}
                   y={paddingTop + chartHeight + 20}
-                  fill="#94a3b8"
-                  fontSize="11"
-                  fontFamily="monospace"
+                  className="fill-slate-600 dark:fill-[#94a3b8] font-mono text-[11px]"
                   textAnchor="middle"
                 >
                   {tl.time}
@@ -213,16 +211,14 @@ export function TimeDistanceChart({
                   y1={y}
                   x2={paddingLeft + chartWidth}
                   y2={y}
-                  stroke="#1c2e4f"
+                  className="stroke-slate-300 dark:stroke-[#1c2e4f]"
                   strokeWidth="1.5"
                 />
                 {/* Station label */}
                 <text
                   x={paddingLeft - 10}
                   y={y + 4}
-                  fill="#f1f5f9"
-                  fontSize="11"
-                  fontWeight="600"
+                  className="fill-slate-800 dark:fill-[#f1f5f9] text-[11px] font-semibold"
                   textAnchor="end"
                 >
                   {stn.code} ({stn.km})

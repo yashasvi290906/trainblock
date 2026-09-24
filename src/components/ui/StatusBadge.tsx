@@ -21,11 +21,11 @@ export function StatusBadge({
   className,
 }: StatusBadgeProps) {
   const variantStyles = {
-    safe: "bg-emerald-50 text-emerald-800 border-emerald-200",
-    attention: "bg-amber-50 text-amber-800 border-amber-200",
-    conflict: "bg-red-50 text-red-800 border-red-200",
-    info: "bg-blue-50 text-blue-800 border-blue-200",
-    neutral: "bg-slate-100 text-slate-700 border-slate-200",
+    safe: "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/60",
+    attention: "bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800/60",
+    conflict: "bg-red-50 dark:bg-red-950/60 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800/60",
+    info: "bg-blue-50 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-200 dark:border-blue-800/60",
+    neutral: "bg-slate-100 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/60",
   }[variant];
 
   const dotColor = {

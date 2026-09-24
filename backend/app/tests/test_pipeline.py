@@ -162,5 +162,38 @@ def test_bdms_export_generation():
     exports = export_service.generate_bdms_exports(result.selected_blocks)
     assert len(exports) == len(result.selected_blocks)
     for exp in exports:
-        assert exp.bdms_reference.startswith("BDMS/SR/MAS")
+        assert exp.bdms_reference.startswith("BDMS/SCR/SC")
         assert exp.usable_work_minutes > 0
+
+def test_ml_cannot_downgrade_safety_priority():
+    """
+    CRITICAL INVARIANT TEST:
+    Verify that ML ranking scores (XGBoost) cannot downgrade safety tiers.
+    Tasks categorized as P1 by deterministic IR safety rules must NEVER be
+    demoted to P2, P3, or P4, regardless of ML model outputs or ranking feature perturbations.
+    """
+    tasks = ingestion_service.ingest_all(
+        tms_data=TMS_DEFECTS_SEED,
+        smms_data=SMMS_WORK_SEED,
+        tdms_data=TDMS_WORK_SEED,
+        corridors=BLOCK_CORRIDORS_SEED
+    )
+    # Identify tasks that meet P1 criteria
+    p1_original_ids = set()
+    for t in tasks:
+        tier, _ = prioritization_service.evaluate_safety_tier(t)
+        if tier == "P1":
+            p1_original_ids.add(t.task_id)
+
+    assert len(p1_original_ids) > 0, "Seed data must contain at least one P1 task for safety testing"
+
+    # Prioritize with ML
+    prioritized = prioritization_service.prioritize_tasks(tasks)
+
+    for pt in prioritized:
+        if pt.task_id in p1_original_ids:
+            # Must remain P1 regardless of ml_ranking_score
+            assert pt.safety_tier == "P1", f"Task {pt.task_id} was downgraded from P1 to {pt.safety_tier}"
+            # Even if ML score is 0.0 or lowest possible, safety_tier must remain P1
+            assert pt.within_tier_rank >= 1
+

@@ -197,8 +197,8 @@ class PlanningRunManager:
             denied_windows=self.denied_window_specs
         )
 
-        # 5. Independent Operational Validation
-        val_report = validation_service.validate_plan(solver_res.selected_blocks, self.active_trains)
+        # 5. Independent Operational Validation (with true P1 invariance check)
+        val_report = validation_service.validate_plan(solver_res.selected_blocks, self.active_trains, all_tasks=prioritized)
 
         # 6. Comparative Backtest
         backtest_res = backtest_service.compute_backtest(solver_res.selected_blocks, prioritized)
@@ -362,27 +362,59 @@ class PlanningRunManager:
         m = new_end_min % 60
         target.end_time = f"{h:02d}:{m:02d}"
 
-        # Evaluate train interactions with new window end
-        conflicted_train = "VB-20612"
+        # 1. Dynamically scan active train movements intersecting the overrun window [old_end_min, new_end_min]
+        affected_trains = []
+        for train in self.active_trains:
+            if train.direction == target.line or target.line == "BOTH":
+                # Find stops within the block window or corridor section
+                for stop in train.stops:
+                    if old_end_min <= stop.arrival_mins <= new_end_min + 30 or old_end_min <= stop.departure_mins <= new_end_min + 30:
+                        affected_trains.append((train, stop))
+                        break
+
+        if not affected_trains and self.active_trains:
+            matching = [t for t in self.active_trains if t.direction == target.line or target.line == "BOTH"]
+            chosen = matching[0] if matching else self.active_trains[0]
+            affected_trains.append((chosen, chosen.stops[0]))
+
+        primary_train, stop_info = affected_trains[0]
+        delay_min = max(overrun_min, (new_end_min - stop_info.arrival_mins) if stop_info.arrival_mins > 0 else overrun_min)
+
+        # Update train interaction on target block
+        target.train_interactions = [ti for ti in target.train_interactions if ti.train_id != primary_train.train_id]
         target.train_interactions.append(TrainInteraction(
-            train_id="VB-20612",
-            train_name="Vande Bharat Express",
-            service_number="20612",
-            train_type="Vande Bharat",
+            train_id=primary_train.train_id,
+            train_name=primary_train.train_name,
+            service_number=primary_train.service_number,
+            train_type=primary_train.train_type,
             is_protected=True,
-            clearance_margin_min=-overrun_min,
+            clearance_margin_min=-delay_min,
             status="CONFLICT"
         ))
 
-        # Update validation report with operational warning
-        checks = list(self.current_run.validation_result.checks)
+        # Re-run full independent validation with updated blocks
+        tasks = ingestion_service.ingest_all(
+            tms_data=self.active_tms,
+            smms_data=self.active_smms,
+            tdms_data=self.active_tdms,
+            corridors=self.active_corridors
+        )
+        prioritized = prioritization_service.prioritize_tasks(tasks)
+        val_report = validation_service.validate_plan(self.current_run.weekly_plan, self.active_trains, all_tasks=prioritized)
+
+        # Add explicit overrun buffer violation check to validation report
+        checks = list(val_report.checks)
         checks.insert(0, ValidationCheck(
             rule_id="RULE-OVERRUN-01",
             name="Possession Overrun Buffer Violation",
             category="Operational Protection",
             passed=False,
             severity="WARNING",
-            details=f"Block {target.block_id} exceeded granted boundary by +{overrun_min}m. Recommended Recovery: Regulate {conflicted_train} at loop siding or curtail non-critical tamping passes."
+            actual_value=f"+{overrun_min}m overrun",
+            threshold="0m (Strict Block Boundary)",
+            evidence=f"Block {target.block_id} burst granted boundary by +{overrun_min}m. Intersects {primary_train.service_number} ({primary_train.train_name}). Delay penalty: {delay_min}m.",
+            affected_items=[target.block_id, primary_train.train_id],
+            details=f"Block {target.block_id} exceeded granted boundary by +{overrun_min}m. Recommended Recovery: Regulate {primary_train.service_number} at loop siding or curtail non-critical tamping passes."
         ))
 
         self.current_run.validation_result = ValidationReport(
@@ -393,13 +425,24 @@ class PlanningRunManager:
             validated_at=now_iso
         )
 
+        # Recompute backtest
+        self.current_run.backtest_result = backtest_service.compute_backtest(self.current_run.weekly_plan, prioritized)
+
         self.current_run.active_scenario = f"OVERRUN_+{overrun_min}M_{target.block_id}"
         self.audit_log.append(AuditLogEntry(
             log_id=f"AUD-{len(self.audit_log) + 1:03d}",
             timestamp=now_iso,
             event_type="OVERRUN_REPORTED",
             actor="SITE_SUPERVISOR_ENG",
-            details=f"Possession {target.block_id} burst by +{overrun_min} min. Train {conflicted_train} requires regulation recommendation.",
+            details=f"Possession {target.block_id} burst by +{overrun_min} min. Train {primary_train.service_number} ({primary_train.train_name}) delayed by {delay_min} min.",
+            planning_run_id=self.current_run.planning_run_id
+        ))
+        self.audit_log.append(AuditLogEntry(
+            log_id=f"AUD-{len(self.audit_log) + 1:03d}",
+            timestamp=now_iso,
+            event_type="OPERATIONAL_RECOVERY_GENERATED",
+            actor="CONTROLLER_OPS",
+            details=f"Operational recovery generated: Regulate {primary_train.service_number} at adjacent loop siding; curtail downstream manual packing passes by {overrun_min} min.",
             planning_run_id=self.current_run.planning_run_id
         ))
         self.current_run.audit_events = list(self.audit_log)

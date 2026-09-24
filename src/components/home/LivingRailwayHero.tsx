@@ -156,30 +156,30 @@ export function LivingRailwayHero() {
   return (
     <div className="w-full">
       {/* LIVING RAILWAY 2.5D DIGITAL CORRIDOR SCENE */}
-      <div className="w-full bg-slate-900 rounded-xl border border-slate-800 shadow-xl overflow-hidden relative text-white select-none">
+      <div className="w-full bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden relative text-slate-800 dark:text-white select-none transition-colors duration-200">
         {/* Top Operational Status Bar */}
-        <div className="bg-slate-950/80 px-4 sm:px-6 py-3 border-b border-slate-800/80 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+        <div className="bg-slate-50 dark:bg-slate-950/80 px-4 sm:px-6 py-3 border-b border-slate-200 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 text-slate-200">
+            <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
               <strong className="tracking-wide">LIVING RAILWAY SIMULATION</strong>
             </div>
-            <span className="text-slate-600">|</span>
-            <span className="text-slate-400">SEC (KM 40) → NDL (KM 120) · 80 km Double Line · 25kV AC</span>
+            <span className="text-slate-300 dark:text-slate-600">|</span>
+            <span className="text-slate-600 dark:text-slate-400">SEC (KM 40) → NDL (KM 120) · 80 km Double Line · 25kV AC</span>
           </div>
 
           <div className="flex items-center gap-3 text-[11px]">
-            <span className="text-slate-400">Time Window:</span>
-            <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800 font-bold">
+            <span className="text-slate-500 dark:text-slate-400">Time Window:</span>
+            <span className="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800 font-bold">
               02:00 – 05:30 IST
             </span>
           </div>
         </div>
 
         {/* The 2.5D Railway Corridor Scene */}
-        <div className="p-4 sm:p-8 relative min-h-[360px] overflow-hidden bg-radial from-slate-900 via-slate-950 to-black">
+        <div className="p-4 sm:p-8 relative min-h-[360px] overflow-hidden bg-slate-50/90 dark:bg-radial dark:from-slate-900 dark:via-slate-950 dark:to-black">
           {/* Station Markers & Kilometre Flags (Top Axis) */}
-          <div className="relative h-8 border-b border-slate-800/80 mb-6">
+          <div className="relative h-8 border-b border-slate-200 dark:border-slate-800/80 mb-6">
             {STATIONS.map((stn) => (
               <div
                 key={stn.code}
@@ -195,11 +195,11 @@ export function LivingRailwayHero() {
                 className="absolute flex flex-col items-center transform -translate-x-1/2 cursor-pointer group"
                 style={{ left: `${stn.percent}%` }}
               >
-                <div className="flex items-center gap-1 font-mono text-xs font-bold text-slate-300 group-hover:text-sky-300 transition-colors">
-                  <MapPin className="w-3 h-3 text-blue-400" />
+                <div className="flex items-center gap-1 font-mono text-xs font-bold text-slate-700 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors">
+                  <MapPin className="w-3 h-3 text-blue-500 dark:text-blue-400" />
                   <span>{stn.code}</span>
                 </div>
-                <div className="text-[9px] font-mono text-slate-400">
+                <div className="text-[9px] font-mono text-slate-500 dark:text-slate-400">
                   KM {stn.km}
                 </div>
               </div>
@@ -207,31 +207,31 @@ export function LivingRailwayHero() {
           </div>
 
           {/* OHE Catenary Wire & Support Cantilever Poles */}
-          <div className="relative h-6 border-b border-dashed border-slate-700/60 flex justify-between px-4 mb-4">
+          <div className="relative h-6 border-b border-dashed border-slate-300 dark:border-slate-700/60 flex justify-between px-4 mb-4">
             {Array.from({ length: 14 }).map((_, idx) => (
               <div key={idx} className="flex flex-col items-center">
-                <div className="w-1 h-3.5 bg-slate-600 rounded-t" />
-                <div className="w-2.5 h-0.5 bg-amber-400/80 shadow-xs" />
+                <div className="w-1 h-3.5 bg-slate-400 dark:bg-slate-600 rounded-t" />
+                <div className="w-2.5 h-0.5 bg-amber-500/80 shadow-xs" />
               </div>
             ))}
           </div>
 
           {/* TRACK 1: DOWN LINE (Eastbound: Towards Warangal & Nandyal) */}
-          <div className="relative h-18 bg-slate-950/90 rounded-xl border border-slate-800 flex items-center overflow-hidden mb-6 shadow-inner">
+          <div className="relative h-18 bg-slate-200/90 dark:bg-slate-950/90 rounded-xl border border-slate-300 dark:border-slate-800 flex items-center overflow-hidden mb-6 shadow-inner">
             {/* Sleepers Pattern */}
             <div
-              className="absolute inset-0 opacity-20"
+              className="absolute inset-0 opacity-30 dark:opacity-20"
               style={{
                 backgroundImage:
                   "repeating-linear-gradient(90deg, #64748b, #64748b 8px, transparent 8px, transparent 20px)",
               }}
             />
             {/* Steel Rail Lines */}
-            <div className="absolute top-4 inset-x-0 h-1 bg-slate-600 shadow-sm" />
-            <div className="absolute bottom-4 inset-x-0 h-1 bg-slate-600 shadow-sm" />
+            <div className="absolute top-4 inset-x-0 h-1 bg-slate-500 dark:bg-slate-600 shadow-sm" />
+            <div className="absolute bottom-4 inset-x-0 h-1 bg-slate-500 dark:bg-slate-600 shadow-sm" />
 
             {/* Line Label */}
-            <span className="absolute left-3 font-mono text-[9px] font-bold text-slate-400 uppercase tracking-wider z-0">
+            <span className="absolute left-3 font-mono text-[9px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider z-0">
               DOWN LINE (SEC → NDL)
             </span>
 
@@ -246,14 +246,14 @@ export function LivingRailwayHero() {
                 })
               }
               onMouseLeave={() => setHoveredElement(null)}
-              className="absolute h-14 rounded-lg bg-amber-500/20 border-2 border-amber-400 ring-2 ring-amber-400/40 text-amber-200 z-10 flex items-center justify-between px-3 cursor-pointer shadow-lg hover:bg-amber-500/30 transition-all"
+              className="absolute h-14 rounded-lg bg-amber-500/20 border-2 border-amber-500 ring-2 ring-amber-400/40 text-amber-900 dark:text-amber-200 z-10 flex items-center justify-between px-3 cursor-pointer shadow-lg hover:bg-amber-500/30 transition-all"
               style={{ left: "38%", width: "34%" }}
             >
               <div className="flex items-center gap-1.5 font-mono text-xs font-extrabold truncate">
-                <Wrench className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <Wrench className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
                 <span>B-014 (ENG + S&T + TRC)</span>
               </div>
-              <span className="text-[10px] font-mono bg-black/80 px-2 py-0.5 rounded border border-amber-400/60 text-amber-300 font-bold shrink-0">
+              <span className="text-[10px] font-mono bg-white/90 dark:bg-black/80 px-2 py-0.5 rounded border border-amber-400/60 text-amber-900 dark:text-amber-300 font-bold shrink-0">
                 02:20–04:10
               </span>
             </div>
@@ -320,36 +320,36 @@ export function LivingRailwayHero() {
                 })
               }
               onMouseLeave={() => setHoveredElement(null)}
-              className="absolute z-10 flex items-center cursor-pointer opacity-40 hover:opacity-80 transition-opacity"
+              className="absolute z-10 flex items-center cursor-pointer opacity-50 hover:opacity-90 transition-opacity"
               style={{
                 left: `${trainPositions["trn-g4217"]}%`,
                 top: "12px",
               }}
             >
               {/* Translucent/Ghosted Freight Locomotive */}
-              <div className="h-7 w-32 bg-emerald-950/80 border-2 border-dashed border-emerald-400 rounded-md flex items-center justify-between px-2 text-emerald-300 font-mono text-[9px] font-bold">
+              <div className="h-7 w-32 bg-emerald-100/90 dark:bg-emerald-950/80 border-2 border-dashed border-emerald-500 dark:border-emerald-400 rounded-md flex items-center justify-between px-2 text-emerald-800 dark:text-emerald-300 font-mono text-[9px] font-bold">
                 <span>G/4217 FORECAST</span>
-                <span className="text-[8px] bg-emerald-900/80 px-1 rounded">04:30</span>
+                <span className="text-[8px] bg-emerald-200/90 dark:bg-emerald-900/80 px-1 rounded">04:30</span>
               </div>
             </div>
           </div>
 
           {/* TRACK 2: UP LINE (Westbound: Towards Kazipet & Secunderabad) */}
-          <div className="relative h-18 bg-slate-950/90 rounded-xl border border-slate-800 flex items-center overflow-hidden shadow-inner">
+          <div className="relative h-18 bg-slate-200/90 dark:bg-slate-950/90 rounded-xl border border-slate-300 dark:border-slate-800 flex items-center overflow-hidden shadow-inner">
             {/* Sleepers Pattern */}
             <div
-              className="absolute inset-0 opacity-20"
+              className="absolute inset-0 opacity-30 dark:opacity-20"
               style={{
                 backgroundImage:
                   "repeating-linear-gradient(90deg, #64748b, #64748b 8px, transparent 8px, transparent 20px)",
               }}
             />
             {/* Steel Rail Lines */}
-            <div className="absolute top-4 inset-x-0 h-1 bg-slate-600 shadow-sm" />
-            <div className="absolute bottom-4 inset-x-0 h-1 bg-slate-600 shadow-sm" />
+            <div className="absolute top-4 inset-x-0 h-1 bg-slate-500 dark:bg-slate-600 shadow-sm" />
+            <div className="absolute bottom-4 inset-x-0 h-1 bg-slate-500 dark:bg-slate-600 shadow-sm" />
 
             {/* Line Label */}
-            <span className="absolute left-3 font-mono text-[9px] font-bold text-slate-400 uppercase tracking-wider z-0">
+            <span className="absolute left-3 font-mono text-[9px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider z-0">
               UP LINE (NDL → SEC)
             </span>
 
@@ -371,7 +371,7 @@ export function LivingRailwayHero() {
               }}
             >
               {/* Train Body Silhouette (Shatabdi: Purple/Silver) */}
-              <div className="h-8 w-26 bg-purple-900 rounded-l-xl rounded-r-md border border-purple-400 shadow-lg flex items-center justify-between px-2 text-white font-mono text-[10px] font-extrabold">
+              <div className="h-8 w-26 bg-purple-700 dark:bg-purple-900 rounded-l-xl rounded-r-md border border-purple-400 shadow-lg flex items-center justify-between px-2 text-white font-mono text-[10px] font-extrabold">
                 <span className="w-2 h-2 rounded-full bg-emerald-400" />
                 <span>12951 SHT</span>
                 <div className="w-2 h-4 bg-sky-400 rounded-r" />
@@ -380,35 +380,35 @@ export function LivingRailwayHero() {
           </div>
 
           {/* Interactive Inspection Tooltip Overlay (Hover feedback) */}
-          <div className="min-h-12 mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
+          <div className="min-h-12 mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-mono">
             {hoveredElement ? (
               <div className="flex items-center gap-2.5 animate-fadeIn">
-                <span className="px-2 py-0.5 rounded bg-blue-900 text-blue-200 border border-blue-700 text-[10px] font-bold">
+                <span className="px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-700 text-[10px] font-bold">
                   {hoveredElement.badge || "INSPECT"}
                 </span>
                 <div>
-                  <strong className="text-white text-xs">{hoveredElement.title}: </strong>
-                  <span className="text-slate-400">{hoveredElement.subtitle}</span>
+                  <strong className="text-slate-900 dark:text-white text-xs">{hoveredElement.title}: </strong>
+                  <span className="text-slate-600 dark:text-slate-400">{hoveredElement.subtitle}</span>
                 </div>
               </div>
             ) : (
-              <div className="text-slate-400 text-[11px] flex items-center gap-2">
-                <Info className="w-3.5 h-3.5 text-slate-500" />
+              <div className="text-slate-500 dark:text-slate-400 text-[11px] flex items-center gap-2">
+                <Info className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                 <span>Hover over trains, maintenance block, or stations to inspect corridor parameters</span>
               </div>
             )}
 
-            <div className="hidden sm:flex items-center gap-3 text-[11px] text-slate-500">
+            <div className="hidden sm:flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400">
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-sky-400" />
+                <span className="w-2.5 h-2.5 rounded-full bg-sky-500" />
                 <span>Solid = Scheduled Train</span>
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 border border-dashed border-emerald-300" />
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-dashed border-emerald-400" />
                 <span>Dashed = Goods Forecast</span>
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded bg-amber-500/30 border border-amber-400" />
+                <span className="w-3 h-3 rounded bg-amber-500/30 border border-amber-500" />
                 <span>Amber = Integrated Possession</span>
               </span>
             </div>
@@ -416,21 +416,21 @@ export function LivingRailwayHero() {
         </div>
 
         {/* 3. HERO RESTRAINED OPERATIONAL CONTROL STRIP */}
-        <div className="bg-slate-950 px-4 sm:px-6 py-3 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
-          <div className="flex flex-wrap items-center gap-4 text-slate-300">
+        <div className="bg-slate-50 dark:bg-slate-950 px-4 sm:px-6 py-3 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+          <div className="flex flex-wrap items-center gap-4 text-slate-700 dark:text-slate-300">
             <div>
-              <span className="text-slate-400 block text-[9.5px]">CORRIDOR:</span>
-              <strong className="text-white">SEC (KM 40) → NDL (KM 120) · 80 km</strong>
+              <span className="text-slate-500 dark:text-slate-400 block text-[9.5px]">CORRIDOR:</span>
+              <strong className="text-slate-900 dark:text-white">SEC (KM 40) → NDL (KM 120) · 80 km</strong>
             </div>
-            <div className="h-6 w-px bg-slate-800" />
+            <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
             <div>
-              <span className="text-slate-400 block text-[9.5px]">MAINTENANCE DEMANDS:</span>
-              <strong className="text-white">47 Demands (4 P1 Mandatory)</strong>
+              <span className="text-slate-500 dark:text-slate-400 block text-[9.5px]">MAINTENANCE DEMANDS:</span>
+              <strong className="text-slate-900 dark:text-white">47 Demands (4 P1 Mandatory)</strong>
             </div>
-            <div className="h-6 w-px bg-slate-800" />
+            <div className="h-6 w-px bg-slate-200 dark:bg-slate-800" />
             <div>
-              <span className="text-slate-400 block text-[9.5px]">OPTIMIZED POSSESSION:</span>
-              <strong className="text-amber-300">Block B-014 (KM 68–94 · 02:20–04:10)</strong>
+              <span className="text-slate-500 dark:text-slate-400 block text-[9.5px]">OPTIMIZED POSSESSION:</span>
+              <strong className="text-amber-700 dark:text-amber-300">Block B-014 (KM 68–94 · 02:20–04:10)</strong>
             </div>
           </div>
 

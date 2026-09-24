@@ -1,53 +1,205 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *));
+
 :root {
-  --bg-page: #070a12;
-  --bg-surface: #0b0f19;
-  --bg-surface-secondary: #111827;
-  --border-subtle: #1e293b;
-  --border-strong: #334155;
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  
-  --brand-orange: #f97316;
-  --brand-orange-hover: #ea580c;
+  /* ==========================================================================
+     RAILBLOCK SEMANTIC DESIGN SYSTEM - LIGHT THEME TOKENS
+     ========================================================================== */
+  --rb-background: #f1f5f9;         /* Slate-100 cool neutral workstation desk */
+  --rb-surface: #ffffff;            /* Pure white primary card / panel */
+  --rb-surface-2: #f8fafc;          /* Slate-50 subtle secondary surface */
+  --rb-surface-3: #e2e8f0;          /* Slate-200 tertiary controls & borders */
+  --rb-surface-elevated: #ffffff;   /* Elevated cards / drawers / modals */
+  --rb-text-primary: #0f172a;       /* Slate-900 high-contrast primary text (>14:1) */
+  --rb-text-secondary: #334155;     /* Slate-700 supporting / section text (>8:1) */
+  --rb-text-tertiary: #64748b;      /* Slate-500 metadata / timestamps (>4.5:1) */
+  --rb-text-disabled: #94a3b8;      /* Slate-400 disabled / placeholder text */
+  --rb-border: #cbd5e1;             /* Slate-300 visible boundary */
+  --rb-border-strong: #94a3b8;      /* Slate-400 prominent divider */
+  --rb-divider: #e2e8f0;            /* Slate-200 hairline separator */
+  --rb-input: #ffffff;              /* Input background */
+  --rb-input-border: #cbd5e1;       /* Input border */
+  --rb-hover: rgba(15, 23, 42, 0.05);
+  --rb-active: rgba(15, 23, 42, 0.08);
+  --rb-selected: rgba(2, 132, 199, 0.10);
+  --rb-focus: #0284c7;
+  --rb-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.08), 0 1px 2px -1px rgba(15, 23, 42, 0.08);
+  --rb-overlay: rgba(15, 23, 42, 0.45);
+
+  /* Semantic Status Tokens (Light Theme) */
+  --rb-success: #16a34a;            /* Green-600 */
+  --rb-success-surface: #f0fdf4;
+  --rb-warning: #d97706;            /* Amber-600 */
+  --rb-warning-surface: #fffbeb;
+  --rb-danger: #dc2626;             /* Red-600 */
+  --rb-danger-surface: #fef2f2;
+  --rb-info: #0284c7;               /* Sky-600 */
+  --rb-info-surface: #f0f9ff;
+
+  /* Railway Domain Tokens (Light Theme) */
+  --rb-railway-blue: #0284c7;
+  --rb-railway-blue-soft: rgba(2, 132, 199, 0.08);
+  --rb-track: #475569;              /* Slate-600 clear steel rails */
+  --rb-track-secondary: #cbd5e1;    /* Slate-300 ties / sleepers */
+  --rb-track-bed: #e2e8f0;          /* Ballast base */
+  --rb-station: #0f172a;
+  --rb-passenger: #2563eb;          /* Blue-600 */
+  --rb-freight: #d97706;            /* Amber-600 */
+  --rb-forecast: #7c3aed;           /* Purple-600 */
+  --rb-block: #ea580c;              /* Orange-600 */
+  --rb-block-integrated: #d97706;
+  --rb-block-power: #7c3aed;
+  --rb-block-line: #0284c7;
+  --rb-block-shadow: rgba(234, 88, 12, 0.15);
+  --rb-delay: #dc2626;
+  --rb-conflict: #dc2626;
+  --rb-maintenance: #0284c7;
+
+  /* Safety Tier Priority Tokens */
+  --rb-p1: #dc2626;                 /* P1 Critical Safety - Red */
+  --rb-p2: #d97706;                 /* P2 Urgent - Amber */
+  --rb-p3: #0284c7;                 /* P3 Planned - Blue */
+  --rb-p4: #64748b;                 /* P4 Routine - Slate */
+
+  /* Legacy Compatibility Mapping */
+  --bg-page: var(--rb-background);
+  --bg-surface: var(--rb-surface);
+  --bg-surface-secondary: var(--rb-surface-2);
+  --border-subtle: var(--rb-border);
+  --border-strong: var(--rb-border-strong);
+  --text-primary: var(--rb-text-primary);
+  --text-secondary: var(--rb-text-secondary);
+  --text-muted: var(--rb-text-tertiary);
+  --brand-orange: #ea580c;
+  --brand-orange-hover: #c2410c;
   --brand-orange-light: #ffedd5;
   --brand-navy: #0f2747;
-  --brand-blue: #3b82f6;
-
-  --semantic-safe: #10b981;
-  --semantic-attention: #f59e0b;
-  --semantic-conflict: #ef4444;
+  --brand-blue: #0284c7;
+  --semantic-safe: #16a34a;
+  --semantic-attention: #d97706;
+  --semantic-conflict: #dc2626;
 }
 
-.dark {
-  --bg-page: #06090f;
-  --bg-surface: #0a0d16;
-  --bg-surface-secondary: #0f1422;
-  --border-subtle: #1a2234;
-  --border-strong: #26334d;
-  --text-primary: #ffffff;
-  --text-secondary: #e2e8f0;
-  --text-muted: #94a3b8;
+.dark, [data-theme="dark"] {
+  /* ==========================================================================
+     RAILBLOCK SEMANTIC DESIGN SYSTEM - DARK THEME TOKENS
+     ========================================================================== */
+  --rb-background: #070a12;         /* Deep midnight operational desk */
+  --rb-surface: #0b0f19;            /* Layer 1 dark slate/navy card */
+  --rb-surface-2: #111827;          /* Layer 2 elevated control panel */
+  --rb-surface-3: #1a2234;          /* Layer 3 toolbar & hover state */
+  --rb-surface-elevated: #151c2e;   /* Modals & floating drawers */
+  --rb-text-primary: #f8fafc;       /* Crisp Slate-50 primary text (>15:1) */
+  --rb-text-secondary: #cbd5e1;     /* Cool Slate-300 secondary text (>9:1) */
+  --rb-text-tertiary: #94a3b8;      /* Muted Slate-400 metadata text (>5:1) */
+  --rb-text-disabled: #64748b;      /* Slate-500 disabled text */
+  --rb-border: #1e293b;             /* Slate-800 subtle division */
+  --rb-border-strong: #334155;      /* Slate-700 emphasized border */
+  --rb-divider: #162032;            /* Slate-850 hairline separator */
+  --rb-input: #0d1322;              /* Input background */
+  --rb-input-border: #1e293b;       /* Input border */
+  --rb-hover: rgba(255, 255, 255, 0.05);
+  --rb-active: rgba(255, 255, 255, 0.08);
+  --rb-selected: rgba(56, 189, 248, 0.12);
+  --rb-focus: #38bdf8;
+  --rb-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.5);
+  --rb-overlay: rgba(3, 7, 18, 0.75);
 
+  /* Semantic Status Tokens (Dark Theme) */
+  --rb-success: #22c55e;            /* Green-500 */
+  --rb-success-surface: rgba(34, 197, 94, 0.12);
+  --rb-warning: #f59e0b;            /* Amber-500 */
+  --rb-warning-surface: rgba(245, 158, 11, 0.12);
+  --rb-danger: #ef4444;             /* Red-500 */
+  --rb-danger-surface: rgba(239, 68, 68, 0.12);
+  --rb-info: #38bdf8;               /* Sky-400 */
+  --rb-info-surface: rgba(56, 189, 248, 0.12);
+
+  /* Railway Domain Tokens (Dark Theme) */
+  --rb-railway-blue: #38bdf8;
+  --rb-railway-blue-soft: rgba(56, 189, 248, 0.12);
+  --rb-track: #64748b;              /* Slate-500 track lines */
+  --rb-track-secondary: #334155;    /* Slate-700 sleepers */
+  --rb-track-bed: #0d1527;          /* Ballast base */
+  --rb-station: #f8fafc;
+  --rb-passenger: #60a5fa;          /* Blue-400 */
+  --rb-freight: #fbbf24;            /* Amber-400 */
+  --rb-forecast: #a78bfa;           /* Purple-400 */
+  --rb-block: #f97316;              /* Orange-500 */
+  --rb-block-integrated: #f59e0b;
+  --rb-block-power: #a78bfa;
+  --rb-block-line: #38bdf8;
+  --rb-block-shadow: rgba(249, 115, 22, 0.25);
+  --rb-delay: #ef4444;
+  --rb-conflict: #ef4444;
+  --rb-maintenance: #38bdf8;
+
+  /* Safety Tier Priority Tokens */
+  --rb-p1: #ef4444;                 /* P1 Critical Safety - Red */
+  --rb-p2: #f59e0b;                 /* P2 Urgent - Amber */
+  --rb-p3: #38bdf8;                 /* P3 Planned - Sky */
+  --rb-p4: #94a3b8;                 /* P4 Routine - Slate */
+
+  /* Legacy Compatibility Mapping */
+  --bg-page: var(--rb-background);
+  --bg-surface: var(--rb-surface);
+  --bg-surface-secondary: var(--rb-surface-2);
+  --border-subtle: var(--rb-border);
+  --border-strong: var(--rb-border-strong);
+  --text-primary: var(--rb-text-primary);
+  --text-secondary: var(--rb-text-secondary);
+  --text-muted: var(--rb-text-tertiary);
   --brand-orange: #ff6b00;
   --brand-orange-hover: #ff8533;
   --brand-orange-light: rgba(255, 107, 0, 0.15);
   --brand-navy: #0d1527;
   --brand-blue: #38bdf8;
-
-  --semantic-safe: #10b981;
+  --semantic-safe: #22c55e;
   --semantic-attention: #f59e0b;
   --semantic-conflict: #ef4444;
 }
 
 body {
-  background-color: var(--bg-page);
-  color: var(--text-primary);
+  background-color: var(--rb-background);
+  color: var(--rb-text-primary);
   font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   overflow-x: hidden;
+}
+
+/* Global Intentional Theme Transition (180ms smooth color morphing) */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 180ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Reusable Railway Semantic Surface Utilities */
+.rb-surface-card {
+  background-color: var(--rb-surface);
+  border: 1px solid var(--rb-border);
+  color: var(--rb-text-primary);
+  border-radius: 0.75rem;
+}
+
+.rb-surface-sub {
+  background-color: var(--rb-surface-2);
+  border: 1px solid var(--rb-border);
+  color: var(--rb-text-secondary);
+}
+
+.rb-surface-panel {
+  background-color: var(--rb-surface);
+  border: 1px solid var(--rb-border);
+  color: var(--rb-text-primary);
 }
 
 /* Railway Control Workstation Scrollbars */
@@ -212,4 +364,27 @@ body {
 
 .animate-pulse-glow {
   animation: pulseGlow 4s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   THEME TRANSITION & ACCESSIBILITY (REDUCED MOTION)
+   ========================================================================== */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
+  transition-duration: 180ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Disable transitions for geometry, SVG positions, and transforms to prevent layout jitter */
+svg path, svg line, svg polyline, svg rect, svg circle {
+  transition-property: fill, stroke, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

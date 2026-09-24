@@ -16,11 +16,11 @@ export function OptimizationStepper({ onPlanGenerated, className }: Optimization
   const { replan, isBackend, currentRun } = usePlanningRun();
 
   const steps = [
-    { id: 1, title: "Ingesting work orders", desc: `${currentRun?.input_summary.total_maintenance_demands || 47} tasks from TMS, SMMS & TDMS feeds` },
+    { id: 1, title: "Ingesting work orders", desc: `${currentRun?.input_summary.total_maintenance_demands ?? "Demands"} tasks from TMS, SMMS & TDMS feeds` },
     { id: 2, title: "Checking constraints", desc: "Safety rules, OHE isolation, speed restrictions" },
-    { id: 3, title: "Composing compatible tasks", desc: `${currentRun?.composition_clusters.length || 14} multi-dept clusters (ENG + S&T + TRC)` },
+    { id: 3, title: "Composing compatible tasks", desc: `${currentRun?.composition_clusters.length ?? "Multi-dept"} clusters (ENG + S&T + TRC)` },
     { id: 4, title: "Optimizing with CP-SAT", desc: "Solving mixed-integer corridor window allocation" },
-    { id: 5, title: "Generating BDMS plan", desc: `${currentRun?.weekly_plan.length || 8} integrated blocks, 0 train conflicts` },
+    { id: 5, title: "Generating BDMS plan", desc: `${currentRun?.weekly_plan.length ?? "Coordinated"} integrated blocks, 0 train conflicts` },
   ];
 
   const handleRunOptimization = async () => {
@@ -56,7 +56,7 @@ export function OptimizationStepper({ onPlanGenerated, className }: Optimization
             </h3>
           </div>
           <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/40 px-2 py-0.5 rounded">
-            CP-SAT Solver Ready (1.4s)
+            CP-SAT Solver {currentRun?.solver_result ? `(${currentRun.solver_result.solver_status} ${(currentRun.solver_result.solve_time_ms / 1000).toFixed(2)}s)` : "Ready"}
           </span>
         </div>
 

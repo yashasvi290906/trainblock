@@ -9,11 +9,11 @@ export function RailwayAmbientBackground() {
       className="pointer-events-none fixed inset-0 -z-10 overflow-hidden select-none transition-opacity duration-700 opacity-30 dark:opacity-30"
     >
       {/* 1. Deep Midnight & Twilight Amber Radial Backdrop */}
-      <div className="absolute inset-0 bg-[#070A12]" />
+      <div className="absolute inset-0 bg-slate-100/60 dark:bg-[#070A12] transition-colors duration-200" />
       <div
-        className="absolute inset-0 opacity-40"
+        className="absolute inset-0 opacity-40 dark:opacity-40"
         style={{
-          background: "radial-gradient(ellipse 80% 50% at 20% 40%, rgba(249, 115, 22, 0.12) 0%, rgba(13, 21, 39, 0) 70%), radial-gradient(ellipse 60% 60% at 80% 30%, rgba(139, 92, 246, 0.08) 0%, rgba(7, 10, 18, 0) 70%)"
+          background: "radial-gradient(ellipse 80% 50% at 20% 40%, rgba(249, 115, 22, 0.08) 0%, rgba(13, 21, 39, 0) 70%), radial-gradient(ellipse 60% 60% at 80% 30%, rgba(139, 92, 246, 0.06) 0%, rgba(7, 10, 18, 0) 70%)"
         }}
       />
 

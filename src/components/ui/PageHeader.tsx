@@ -30,22 +30,22 @@ export function PageHeader({
   className,
 }: PageHeaderProps) {
   return (
-    <div className={cn("space-y-2 pb-5 border-b border-slate-200/80 mb-6", className)}>
+    <div className={cn("space-y-2 pb-5 border-b border-slate-200 dark:border-white/10 mb-6", className)}>
       {/* Optional Breadcrumbs */}
       {breadcrumbs && breadcrumbs.length > 0 && (
-        <nav className="flex items-center gap-1.5 text-xs text-slate-500 font-mono">
+        <nav className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-mono">
           {breadcrumbs.map((item, idx) => (
             <React.Fragment key={idx}>
-              {idx > 0 && <ChevronRight className="w-3 h-3 text-slate-400" />}
+              {idx > 0 && <ChevronRight className="w-3 h-3 text-slate-400 dark:text-slate-500" />}
               {item.href ? (
                 <Link
                   href={item.href}
-                  className="hover:text-slate-800 transition-colors"
+                  className="hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
                 >
                   {item.label}
                 </Link>
               ) : (
-                <span className="text-slate-700 font-medium">{item.label}</span>
+                <span className="text-slate-700 dark:text-slate-300 font-medium">{item.label}</span>
               )}
             </React.Fragment>
           ))}
@@ -56,13 +56,13 @@ export function PageHeader({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-3">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
               {title}
             </h1>
             {statusBadge}
           </div>
           {description && (
-            <p className="text-sm text-slate-600 max-w-3xl leading-relaxed">
+            <p className="text-sm text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
               {description}
             </p>
           )}
