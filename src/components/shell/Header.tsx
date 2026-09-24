@@ -13,10 +13,13 @@ import {
   ShieldCheck,
   Cpu,
   Layers,
-  ArrowRight
+  ArrowRight,
+  Sun,
+  Moon
 } from "lucide-react";
 import { InputSourcesModal } from "@/components/common/InputSourcesModal";
 import { usePlanningRun } from "@/context/PlanningRunContext";
+import { useTheme } from "@/context/ThemeContext";
 
 interface HeaderProps {
   onToggleMobileMenu?: () => void;
@@ -27,15 +30,16 @@ export function Header({ onToggleMobileMenu, isMobileMenuOpen }: HeaderProps) {
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showSourcesModal, setShowSourcesModal] = useState(false);
   const { currentRun, resetDemo, loading, isBackend } = usePlanningRun();
+  const { theme, toggleTheme } = useTheme();
 
   const solverStatus = currentRun?.solver_result?.solver_status || "OPTIMAL";
   const runId = currentRun?.planning_run_id || "RB-2026-09-23";
   const isValidated = currentRun?.validation_result?.overall_status === "VALIDATED";
 
   return (
-    <header className="bg-slate-900 text-slate-100 border-b border-slate-800 shrink-0 select-none z-30">
+    <header className="bg-[#070A12]/95 backdrop-blur-md text-slate-100 border-b border-white/10 shrink-0 select-none z-30">
       {/* Top Technical Control Strip */}
-      <div className="h-12 px-4 sm:px-6 flex items-center justify-between">
+      <div className="h-13 px-4 sm:px-6 flex items-center justify-between">
         {/* Brand & Division Identifier */}
         <div className="flex items-center gap-3">
           {onToggleMobileMenu && (
@@ -49,23 +53,26 @@ export function Header({ onToggleMobileMenu, isMobileMenuOpen }: HeaderProps) {
           )}
 
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-7 h-7 rounded bg-blue-600 text-white flex items-center justify-center font-mono font-black text-xs shadow-xs group-hover:bg-blue-500 transition-colors">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-amber-600 text-white flex items-center justify-center font-mono font-black text-xs shadow-md shadow-orange-500/20 group-hover:scale-105 transition-all">
               <TrainTrack className="w-4 h-4 text-white" />
             </div>
-            <div className="flex items-baseline gap-2">
-              <span className="font-extrabold text-white font-mono text-sm tracking-tight">
-                RAILBLOCK
-              </span>
-              <span className="hidden sm:inline text-[11px] text-slate-400 font-medium">
-                Integrated Railway Maintenance Planning
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1.5">
+                <span className="font-black text-white font-mono text-base tracking-tight">
+                  Train<span className="text-orange-500">Block AI</span>
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse shadow-[0_0_8px_#f97316]" />
+              </div>
+              <span className="text-[10px] text-slate-400 font-medium">
+                Indian Railways · SIH PS 26027
               </span>
             </div>
           </Link>
 
-          <div className="hidden lg:flex items-center gap-1.5 pl-3 border-l border-slate-800 text-[11px] font-mono text-slate-400">
-            <span className="text-blue-400 font-bold">SEC–NDL CORRIDOR</span>
+          <div className="hidden lg:flex items-center gap-2 pl-3 border-l border-slate-800 text-xs font-mono text-slate-400">
+            <span className="text-orange-400 font-bold">SEC–NDL CORRIDOR</span>
             <span>·</span>
-            <span>KM 40–120 (Double Line)</span>
+            <span className="text-slate-300">KM 40–120 (Double Line)</span>
           </div>
         </div>
 
@@ -135,6 +142,16 @@ export function Header({ onToggleMobileMenu, isMobileMenuOpen }: HeaderProps) {
           >
             <RotateCcw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} />
             <span className="hidden sm:inline">RESET</span>
+          </button>
+
+          {/* Theme Toggle (Light / Dark) */}
+          <button
+            onClick={toggleTheme}
+            className="flex items-center justify-center w-7 h-7 rounded bg-slate-800 hover:bg-slate-700 text-amber-300 hover:text-amber-200 border border-slate-700 transition-colors cursor-pointer"
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+            aria-label="Toggle theme"
+          >
+            {theme === "dark" ? <Sun className="w-3.5 h-3.5 text-amber-400" /> : <Moon className="w-3.5 h-3.5 text-blue-300" />}
           </button>
         </div>
       </div>

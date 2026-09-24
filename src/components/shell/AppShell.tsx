@@ -7,6 +7,7 @@ import { Header } from "./Header";
 import { PRIMARY_NAVIGATION } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { LayoutGrid, FileText, Activity, GitFork, BarChart2, ShieldAlert } from "lucide-react";
+import { RailwayAmbientBackground } from "@/components/common/RailwayAmbientBackground";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -45,7 +46,10 @@ export function AppShell({ children }: AppShellProps) {
   }) || PRIMARY_NAVIGATION[0];
 
   return (
-    <div className="flex flex-col h-screen w-screen overflow-hidden bg-slate-50 text-slate-900 font-sans">
+    <div className="relative flex flex-col h-screen w-screen overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
+      {/* Personalized Ambient Railway Background Layer */}
+      <RailwayAmbientBackground />
+
       {/* 1. Global Workstation Header */}
       <Header
         onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -53,7 +57,7 @@ export function AppShell({ children }: AppShellProps) {
       />
 
       {/* 2. Primary Horizontal Navigation Bar */}
-      <nav className="bg-white border-b border-slate-200 px-4 sm:px-6 shrink-0 z-20">
+      <nav className="bg-[#0B0F19]/95 backdrop-blur-md border-b border-white/10 px-4 sm:px-6 shrink-0 z-20">
         <div className="flex items-center justify-between h-11">
           {/* Main Workstation Modules */}
           <div className="flex items-center space-x-1 sm:space-x-2 overflow-x-auto scrollbar-none">
@@ -67,10 +71,10 @@ export function AppShell({ children }: AppShellProps) {
                   key={item.key}
                   href={item.href}
                   className={cn(
-                    "px-3 py-1.5 rounded-md text-xs font-mono font-bold tracking-tight transition-all flex items-center gap-1.5 whitespace-nowrap",
+                    "px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold tracking-tight transition-all flex items-center gap-1.5 whitespace-nowrap",
                     isItemActive
-                      ? "bg-slate-900 text-white shadow-xs"
-                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      ? "bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-xs"
+                      : "text-slate-300 hover:text-orange-400 hover:bg-white/5"
                   )}
                 >
                   <span>{item.label}</span>
@@ -81,8 +85,8 @@ export function AppShell({ children }: AppShellProps) {
 
           {/* Sub-Items Contextual Tabs */}
           {activeSection?.subItems && activeSection.subItems.length > 0 && (
-            <div className="hidden lg:flex items-center gap-1 text-xs border-l border-slate-200 pl-3">
-              <span className="text-[10px] font-mono text-slate-400 uppercase font-semibold mr-1">
+            <div className="hidden lg:flex items-center gap-1 text-xs border-l border-white/10 pl-3">
+              <span className="text-[10px] font-mono text-slate-500 uppercase font-semibold mr-1">
                 Views:
               </span>
               {activeSection.subItems.map((sub) => {
@@ -92,10 +96,10 @@ export function AppShell({ children }: AppShellProps) {
                     key={sub.href}
                     href={sub.href}
                     className={cn(
-                      "px-2.5 py-1 rounded text-[11px] font-mono transition-colors",
+                      "px-2.5 py-1 rounded-md text-[11px] font-mono transition-colors",
                       isSubActive
-                        ? "bg-blue-50 text-blue-800 font-bold border border-blue-200"
-                        : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                        ? "bg-orange-500/15 text-orange-300 font-bold border border-orange-500/30"
+                        : "text-slate-400 hover:text-white hover:bg-white/5"
                     )}
                   >
                     {sub.label}

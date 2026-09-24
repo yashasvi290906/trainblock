@@ -190,18 +190,14 @@ export default function LiveCorridorPage() {
 
   // Sync with active PlanningRun if available
   useEffect(() => {
-    if (currentRun?.blocks && currentRun.blocks.length > 0) {
-      const firstBlock = currentRun.blocks[0];
-      const deptSet = new Set<string>();
-      firstBlock.tasks?.forEach((t) => {
-        if (t.department) deptSet.add(t.department.toUpperCase());
-      });
-      const depts = deptSet.size > 0 ? Array.from(deptSet) : ["ENGINEERING", "S&T", "TRACTION"];
+    if (currentRun?.weekly_plan && currentRun.weekly_plan.length > 0) {
+      const firstBlock = currentRun.weekly_plan[0];
+      const depts: ("ENGINEERING" | "S&T" | "TRACTION")[] = ["ENGINEERING", "S&T", "TRACTION"];
       const bTasks = (firstBlock.tasks && firstBlock.tasks.length > 0)
-        ? firstBlock.tasks.map((t, idx) => ({
+        ? firstBlock.tasks.map((t: { task_id?: string; department?: string; title?: string; km_start?: number; km_end?: number }, idx: number) => ({
             id: t.task_id || `TSK-${idx + 1}`,
             dept: t.department || "Engineering",
-            desc: t.description || "Track renewal / overhaul",
+            desc: t.title || "Track renewal / overhaul",
             km: `KM ${t.km_start ?? firstBlock.km_start ?? 68}-${t.km_end ?? firstBlock.km_end ?? 94}`,
           }))
         : INITIAL_BLOCK.tasks;
@@ -219,8 +215,8 @@ export default function LiveCorridorPage() {
         status: "PROTECTED",
         departments: depts,
         taskCount: bTasks.length,
-        machinery: (firstBlock.machinery && firstBlock.machinery.length > 0)
-          ? firstBlock.machinery
+        machinery: ((firstBlock as any).machinery && (firstBlock as any).machinery.length > 0)
+          ? (firstBlock as any).machinery
           : INITIAL_BLOCK.machinery,
         tasks: bTasks,
       };
@@ -345,7 +341,7 @@ export default function LiveCorridorPage() {
   const handleSimulateDenial = () => {
     setIsDenied(true);
     setBlock((b) => ({ ...b, status: "DENIED" }));
-    denyBlock().catch(console.error);
+    denyBlock(block.id).catch(console.error);
     setEventLog((prev) => [
       {
         time: formatClock(simSeconds),
@@ -439,7 +435,7 @@ export default function LiveCorridorPage() {
 
   return (
     <AppShell>
-      <div className="flex flex-col h-[calc(100vh-130px)] max-w-[1520px] mx-auto bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+      <div className="flex flex-col h-[calc(100vh-120px)] max-w-[1580px] mx-auto bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-2xl overflow-hidden shadow-2xl mb-4">
         {/* 1. TOP OPERATIONAL STATUS BAR */}
         <LiveCorridorHeader
           simSeconds={simSeconds}

@@ -1,23 +1,45 @@
 @import "tailwindcss";
 
 :root {
-  --bg-page: #f8fafc;
-  --bg-surface: #ffffff;
-  --bg-surface-secondary: #f1f5f9;
-  --border-subtle: #e2e8f0;
-  --border-strong: #cbd5e1;
-  --text-primary: #0f2747;
-  --text-secondary: #334155;
-  --text-muted: #64748b;
+  --bg-page: #070a12;
+  --bg-surface: #0b0f19;
+  --bg-surface-secondary: #111827;
+  --border-subtle: #1e293b;
+  --border-strong: #334155;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
   
+  --brand-orange: #f97316;
+  --brand-orange-hover: #ea580c;
+  --brand-orange-light: #ffedd5;
   --brand-navy: #0f2747;
-  --brand-blue: #1d4ed8;
-  --brand-blue-hover: #1e40af;
-  --brand-subtle: #eff6ff;
+  --brand-blue: #3b82f6;
 
-  --semantic-safe: #059669;
-  --semantic-attention: #d97706;
-  --semantic-conflict: #dc2626;
+  --semantic-safe: #10b981;
+  --semantic-attention: #f59e0b;
+  --semantic-conflict: #ef4444;
+}
+
+.dark {
+  --bg-page: #06090f;
+  --bg-surface: #0a0d16;
+  --bg-surface-secondary: #0f1422;
+  --border-subtle: #1a2234;
+  --border-strong: #26334d;
+  --text-primary: #ffffff;
+  --text-secondary: #e2e8f0;
+  --text-muted: #94a3b8;
+
+  --brand-orange: #ff6b00;
+  --brand-orange-hover: #ff8533;
+  --brand-orange-light: rgba(255, 107, 0, 0.15);
+  --brand-navy: #0d1527;
+  --brand-blue: #38bdf8;
+
+  --semantic-safe: #10b981;
+  --semantic-attention: #f59e0b;
+  --semantic-conflict: #ef4444;
 }
 
 body {
@@ -30,18 +52,18 @@ body {
 
 /* Railway Control Workstation Scrollbars */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--bg-surface-secondary);
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 2px;
+  background: var(--border-strong);
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--text-muted);
 }
 
 .mono-num {
@@ -60,21 +82,134 @@ body {
   );
 }
 
-/* Restrained Operational Animation Speeds */
-.transition-micro {
-  transition-property: color, background-color, border-color, opacity, transform;
-  transition-duration: 150ms;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+/* Ambient Railway Motion Keyframes */
+@keyframes trainGlideHorizontal {
+  0% {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.8;
+  }
+  95% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(120vw);
+    opacity: 0;
+  }
 }
 
-.transition-panel {
-  transition-property: all;
-  transition-duration: 250ms;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+@keyframes trackTiePerspective {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 40;
+  }
 }
 
-.transition-state {
-  transition-property: all;
-  transition-duration: 600ms;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+@keyframes signalPulseGreen {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.08);
+  }
+}
+
+.animate-train-glide {
+  animation: trainGlideHorizontal 28s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-train-glide-reverse {
+  animation: trainGlideHorizontal 36s cubic-bezier(0.4, 0, 0.2, 1) infinite reverse;
+}
+
+.animate-track-flow {
+  animation: trackTiePerspective 1.8s linear infinite;
+}
+
+.animate-signal-lantern {
+  animation: signalPulseGreen 3s ease-in-out infinite;
+}
+
+@keyframes trainApproachFront {
+  0% {
+    top: 38%;
+    transform: translate(-50%, -50%) scale(0.12);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.35;
+  }
+  75% {
+    opacity: 0.35;
+  }
+  100% {
+    top: 85%;
+    transform: translate(-50%, -50%) scale(1.6);
+    opacity: 0;
+  }
+}
+
+.animate-train-approach {
+  animation: trainApproachFront 18s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+}
+
+/* Glassmorphism & Portal Identity Utilities */
+.glass-panel {
+  background: rgba(11, 15, 25, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel:hover {
+  border-color: rgba(249, 115, 22, 0.35);
+  box-shadow: 0 10px 30px -10px rgba(249, 115, 22, 0.15);
+}
+
+.glass-card-orange {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(11, 15, 25, 0.8) 100%);
+  border: 1px solid rgba(249, 115, 22, 0.25);
+  backdrop-filter: blur(12px);
+}
+
+.text-glow-orange {
+  text-shadow: 0 0 20px rgba(249, 115, 22, 0.6), 0 0 40px rgba(249, 115, 22, 0.2);
+}
+
+.glow-orange {
+  box-shadow: 0 0 25px rgba(249, 115, 22, 0.4);
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(3deg);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 8s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(1.04);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
 }

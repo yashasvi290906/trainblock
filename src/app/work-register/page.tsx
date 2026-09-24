@@ -52,58 +52,58 @@ export default function WorkRegisterPage() {
 
   return (
     <AppShell>
-      <div className="flex flex-col h-full bg-slate-50 text-slate-900 font-sans select-none overflow-hidden">
+      <div className="flex flex-col h-[calc(100vh-110px)] bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans select-none overflow-hidden rounded-2xl border border-slate-300 dark:border-slate-800 shadow-xl mx-2 sm:mx-6 mb-4">
         {/* Top Operational Context Strip */}
-        <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 shrink-0 text-xs font-mono">
-          <div className="flex items-center gap-3">
-            <span className="font-extrabold text-slate-900 text-sm tracking-tight">
+        <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 shrink-0 text-sm font-mono">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="font-black text-slate-900 dark:text-white text-base tracking-tight">
               MAINTENANCE DEMAND REGISTER
             </span>
-            <span className="text-slate-300">|</span>
-            <span className="text-slate-600">
-              Run: <strong className="text-blue-700">{currentRun?.planning_run_id || "RB-2026-09-23"}</strong>
+            <span className="text-slate-300 dark:text-slate-700">|</span>
+            <span className="text-slate-700 dark:text-slate-300 text-xs sm:text-sm">
+              Run: <strong className="text-orange-500">{currentRun?.planning_run_id || "RB-2026-09-23"}</strong>
             </span>
-            <span className="text-slate-300">|</span>
-            <span className="text-slate-600">
-              Total Ingested: <strong className="text-slate-900">{tasks.length} Work Orders</strong>
+            <span className="text-slate-300 dark:text-slate-700">|</span>
+            <span className="text-slate-700 dark:text-slate-300 text-xs sm:text-sm">
+              Total Ingested: <strong className="text-slate-900 dark:text-white">{tasks.length} Work Orders</strong>
             </span>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-slate-500 font-medium">Prioritization:</span>
-            <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-[11px]">
+            <span className="text-slate-600 dark:text-slate-400 font-medium text-xs">Prioritization:</span>
+            <span className="px-2.5 py-1 rounded bg-emerald-50 dark:bg-emerald-950/70 text-emerald-900 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 font-black text-xs">
               Safety Boundary Rules (P1–P4) + XGBoost Ranker
             </span>
           </div>
         </div>
 
         {/* Filter Toolbar */}
-        <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-2 flex flex-wrap items-center justify-between gap-3 shrink-0 text-xs font-mono">
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="bg-slate-100 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 shrink-0 text-xs font-mono">
+          <div className="flex flex-wrap items-center gap-3">
             {/* Search Input */}
             <div className="relative">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search ID, Defect, Asset..."
-                className="pl-8 pr-3 py-1 bg-slate-50 border border-slate-300 rounded text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-600 w-52"
+                className="pl-9 pr-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-orange-500 w-60 shadow-xs"
               />
             </div>
 
             {/* Tier Filters */}
-            <div className="flex items-center gap-1 border-l border-slate-200 pl-2">
-              <span className="text-[10px] text-slate-400 uppercase font-bold mr-1">Tier:</span>
+            <div className="flex items-center gap-1.5 border-l border-slate-300 dark:border-slate-700 pl-3">
+              <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-black mr-1">Tier:</span>
               {["ALL", "P1", "P2", "P3", "P4"].map((tier) => (
                 <button
                   key={tier}
                   onClick={() => setTierFilter(tier)}
                   className={cn(
-                    "px-2 py-0.5 rounded text-[11px] font-bold transition-colors cursor-pointer",
+                    "px-2.5 py-1 rounded-md text-xs font-black transition-all cursor-pointer",
                     tierFilter === tier
-                      ? "bg-slate-900 text-white"
-                      : "bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200"
+                      ? "bg-orange-500 text-white shadow-xs"
+                      : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700"
                   )}
                 >
                   {tier}
@@ -112,27 +112,27 @@ export default function WorkRegisterPage() {
             </div>
 
             {/* Department Filters */}
-            <div className="hidden sm:flex items-center gap-1 border-l border-slate-200 pl-2">
-              <span className="text-[10px] text-slate-400 uppercase font-bold mr-1">Dept:</span>
+            <div className="hidden sm:flex items-center gap-1.5 border-l border-slate-300 dark:border-slate-700 pl-3">
+              <span className="text-xs text-slate-500 dark:text-slate-400 uppercase font-black mr-1">Dept:</span>
               {["ALL", "Engineering", "S&T", "Traction"].map((dept) => (
                 <button
                   key={dept}
                   onClick={() => setDeptFilter(dept)}
                   className={cn(
-                    "px-2 py-0.5 rounded text-[11px] font-semibold transition-colors cursor-pointer",
+                    "px-2.5 py-1 rounded-md text-xs font-bold transition-all cursor-pointer",
                     deptFilter === dept
-                      ? "bg-blue-900 text-white"
-                      : "bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200"
+                      ? "bg-orange-500 text-white shadow-xs"
+                      : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700"
                   )}
                 >
-                  {dept === "Engineering" ? "ENG" : dept === "Traction" ? "TRD" : dept}
+                  {dept === "Engineering" ? "Civil Engg" : dept === "Traction" ? "TRD (OHE)" : dept}
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="text-[11px] text-slate-500">
-            Showing <strong>{filteredTasks.length}</strong> of <strong>{tasks.length}</strong> demands
+          <div className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+            Showing <strong className="text-slate-900 dark:text-white">{filteredTasks.length}</strong> of <strong className="text-slate-900 dark:text-white">{tasks.length}</strong> demands
           </div>
         </div>
 
@@ -140,19 +140,19 @@ export default function WorkRegisterPage() {
         <div className="flex-1 flex min-h-0 overflow-hidden relative">
           {/* High-Density Operational Table */}
           <div className="flex-1 overflow-y-auto">
-            <table className="w-full text-left border-collapse text-xs font-mono">
-              <thead className="sticky top-0 bg-slate-100 border-b border-slate-200 text-[10px] text-slate-600 uppercase font-bold tracking-wider z-10">
+            <table className="w-full text-left border-collapse font-mono">
+              <thead className="sticky top-0 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 uppercase font-black tracking-wider z-10">
                 <tr>
-                  <th className="py-2.5 px-3">Priority</th>
-                  <th className="py-2.5 px-3">Work Order</th>
-                  <th className="py-2.5 px-3">Defect / Task Description</th>
-                  <th className="py-2.5 px-3">Location</th>
-                  <th className="py-2.5 px-3">Department</th>
-                  <th className="py-2.5 px-3">Duration</th>
-                  <th className="py-2.5 px-3">Planning Status</th>
+                  <th className="py-3 px-4">Priority</th>
+                  <th className="py-3 px-4">Work Order</th>
+                  <th className="py-3 px-4">Defect / Task Description</th>
+                  <th className="py-3 px-4">Location</th>
+                  <th className="py-3 px-4">Department</th>
+                  <th className="py-3 px-4">Duration</th>
+                  <th className="py-3 px-4">Planning Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 bg-white">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80 bg-white dark:bg-slate-900">
                 {filteredTasks.map((task) => {
                   const assignedBlock = weeklyBlocks.find((b) =>
                     b.tasks.some((t) => t.task_id === task.task_id)
@@ -164,22 +164,22 @@ export default function WorkRegisterPage() {
                       key={task.task_id}
                       onClick={() => setSelectedTask(task)}
                       className={cn(
-                        "hover:bg-slate-50 cursor-pointer transition-colors",
-                        isSelected && "bg-blue-50/80 font-semibold"
+                        "hover:bg-blue-50/50 dark:hover:bg-slate-800/60 cursor-pointer transition-colors text-xs sm:text-sm",
+                        isSelected && "bg-blue-50/90 dark:bg-blue-950/40 font-semibold"
                       )}
                     >
                       {/* Priority Semantic Tag */}
-                      <td className="py-2 px-3 whitespace-nowrap">
+                      <td className="py-3 px-4 whitespace-nowrap">
                         <span
                           className={cn(
-                            "px-1.5 py-0.5 rounded text-[10px] font-black",
+                            "px-2.5 py-1 rounded-md text-xs font-black tracking-wider",
                             task.safety_tier === "P1"
-                              ? "bg-red-600 text-white"
+                              ? "bg-red-600 text-white shadow-xs"
                               : task.safety_tier === "P2"
-                              ? "bg-amber-100 text-amber-900 border border-amber-300"
+                              ? "bg-amber-500 text-slate-950 font-black shadow-xs"
                               : task.safety_tier === "P3"
-                              ? "bg-blue-50 text-blue-900 border border-blue-200"
-                              : "bg-slate-100 text-slate-700 border border-slate-200"
+                              ? "bg-blue-100 dark:bg-blue-950/70 text-blue-900 dark:text-blue-300 border border-blue-300 dark:border-blue-700"
+                              : "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-300 border border-slate-300 dark:border-slate-700"
                           )}
                         >
                           {task.safety_tier}
@@ -187,56 +187,65 @@ export default function WorkRegisterPage() {
                       </td>
 
                       {/* WO Identifier + Source */}
-                      <td className="py-2 px-3 whitespace-nowrap">
-                        <div className="font-bold text-slate-900">{task.task_id}</div>
-                        <div className="text-[10px] text-slate-400 font-normal">
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <div className="font-black text-slate-900 dark:text-white text-xs sm:text-sm">{task.task_id}</div>
+                        <div className="text-xs text-slate-500 dark:text-slate-400 font-normal">
                           {task.source_system} #{task.source_record_id}
                         </div>
                       </td>
 
                       {/* Defect Description */}
-                      <td className="py-2 px-3">
-                        <div className="text-slate-800 font-sans font-medium line-clamp-1">
+                      <td className="py-3 px-4">
+                        <div className="text-slate-900 dark:text-slate-100 font-sans font-medium line-clamp-1 text-xs sm:text-sm">
                           {task.title}
                         </div>
-                        <div className="text-[10px] text-slate-500 font-mono">
+                        <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                           Asset: {task.asset_id} ({task.asset_type})
                         </div>
                       </td>
 
                       {/* Location Coordinates */}
-                      <td className="py-2 px-3 whitespace-nowrap">
-                        <div className="text-slate-800 font-bold">
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <div className="text-slate-900 dark:text-slate-100 font-bold text-xs sm:text-sm">
                           KM {task.km_start.toFixed(1)} → {task.km_end.toFixed(1)}
                         </div>
-                        <div className="text-[10px] text-slate-500 font-normal">
+                        <div className="text-xs text-slate-500 dark:text-slate-400 font-normal">
                           {task.line} Line
                         </div>
                       </td>
 
                       {/* Department */}
-                      <td className="py-2 px-3 whitespace-nowrap">
-                        <span className="flex items-center gap-1.5 text-slate-700">
-                          {task.department === "Engineering" && <Wrench className="w-3 h-3 text-amber-600" />}
-                          {task.department === "S&T" && <Radio className="w-3 h-3 text-sky-600" />}
-                          {task.department === "Traction" && <Zap className="w-3 h-3 text-emerald-600" />}
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <span
+                          className={cn(
+                            "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md border text-xs font-bold",
+                            task.department === "Engineering"
+                              ? "bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800"
+                              : task.department === "S&T"
+                              ? "bg-sky-50 dark:bg-sky-950/50 text-sky-800 dark:text-sky-300 border-sky-300 dark:border-sky-800"
+                              : "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800"
+                          )}
+                        >
+                          {task.department === "Engineering" && <Wrench className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />}
+                          {task.department === "S&T" && <Radio className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />}
+                          {task.department === "Traction" && <Zap className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />}
                           <span>{task.department}</span>
                         </span>
                       </td>
 
                       {/* Duration */}
-                      <td className="py-2 px-3 whitespace-nowrap text-slate-700">
+                      <td className="py-3 px-4 whitespace-nowrap text-slate-800 dark:text-slate-200 font-bold text-xs sm:text-sm">
                         {task.duration_min} min
                       </td>
 
                       {/* Planning Status */}
-                      <td className="py-2 px-3 whitespace-nowrap">
+                      <td className="py-3 px-4 whitespace-nowrap">
                         {assignedBlock ? (
-                          <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-900 border border-blue-200 font-bold text-[10px]">
-                            {assignedBlock.block_id} ({assignedBlock.start_time})
+                          <span className="px-2.5 py-1 rounded-lg bg-blue-100 dark:bg-blue-950/80 text-blue-900 dark:text-blue-200 border border-blue-300 dark:border-blue-700 font-black text-xs">
+                            {assignedBlock.block_id} [{assignedBlock.start_time}]
                           </span>
                         ) : (
-                          <span className="px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 text-[10px]">
+                          <span className="px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/70 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-700 text-xs font-bold">
                             DEFERRED P3/P4
                           </span>
                         )}
@@ -250,80 +259,80 @@ export default function WorkRegisterPage() {
 
           {/* Right-Side Work Order Detail Drawer (Progressive Disclosure) */}
           {selectedTask && (
-            <aside className="w-96 bg-white border-l border-slate-200 h-full shadow-xl flex flex-col font-mono text-xs z-20 shrink-0">
+            <aside className="w-96 bg-white dark:bg-slate-900 border-l border-slate-300 dark:border-slate-800 h-full shadow-2xl flex flex-col font-mono text-xs z-20 shrink-0">
               {/* Drawer Header */}
-              <div className="h-12 bg-slate-900 text-white px-4 flex items-center justify-between shrink-0">
-                <div className="flex items-center gap-2">
+              <div className="h-14 bg-slate-900 dark:bg-slate-950 text-white px-5 flex items-center justify-between shrink-0 border-b border-slate-800">
+                <div className="flex items-center gap-2.5">
                   <span
                     className={cn(
-                      "px-1.5 py-0.2 rounded text-[10px] font-black",
+                      "px-2 py-0.5 rounded text-xs font-black",
                       selectedTask.safety_tier === "P1" ? "bg-red-600 text-white" : "bg-slate-700 text-white"
                     )}
                   >
                     {selectedTask.safety_tier}
                   </span>
-                  <span className="font-extrabold text-sm tracking-tight">{selectedTask.task_id}</span>
+                  <span className="font-black text-base tracking-tight">{selectedTask.task_id}</span>
                 </div>
                 <button
                   onClick={() => setSelectedTask(null)}
-                  className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800"
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
 
               {/* Drawer Body */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              <div className="flex-1 overflow-y-auto p-5 space-y-4">
                 <div className="space-y-1">
-                  <div className="text-[10px] text-slate-400 uppercase font-bold">Defect Title</div>
-                  <h3 className="text-sm font-bold text-slate-900 font-sans leading-tight">
+                  <div className="text-xs text-slate-500 dark:text-slate-400 uppercase font-black">Defect Title</div>
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white font-sans leading-snug">
                     {selectedTask.title}
                   </h3>
                 </div>
 
-                <div className="p-3 bg-slate-50 rounded border border-slate-200 space-y-1.5 text-[11px] text-slate-700">
-                  <div>Department: <strong>{selectedTask.department}</strong></div>
-                  <div>Source Feed: <strong>{selectedTask.source_system} (#{selectedTask.source_record_id})</strong></div>
-                  <div>Asset: <strong>{selectedTask.asset_id} ({selectedTask.asset_type})</strong></div>
-                  <div>Location: <strong>KM {selectedTask.km_start.toFixed(1)}–{selectedTask.km_end.toFixed(1)} ({selectedTask.line} Line)</strong></div>
-                  <div>Duration: <strong>{selectedTask.duration_min} minutes</strong></div>
-                  <div>OHE Isolation: <strong>{selectedTask.ohe_required ? "REQUIRED" : "NOT REQUIRED"}</strong></div>
-                  <div>Machine: <strong>{selectedTask.machine_required || "Manual Track Crew"}</strong></div>
-                  <div>Crew Needed: <strong>{selectedTask.crew_required} personnel</strong></div>
+                <div className="p-3.5 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2 text-xs text-slate-700 dark:text-slate-300">
+                  <div>Department: <strong className="text-slate-900 dark:text-white">{selectedTask.department}</strong></div>
+                  <div>Source Feed: <strong className="text-slate-900 dark:text-white">{selectedTask.source_system} (#{selectedTask.source_record_id})</strong></div>
+                  <div>Asset: <strong className="text-slate-900 dark:text-white">{selectedTask.asset_id} ({selectedTask.asset_type})</strong></div>
+                  <div>Location: <strong className="text-slate-900 dark:text-white">KM {selectedTask.km_start.toFixed(1)}–{selectedTask.km_end.toFixed(1)} ({selectedTask.line} Line)</strong></div>
+                  <div>Duration: <strong className="text-slate-900 dark:text-white">{selectedTask.duration_min} minutes</strong></div>
+                  <div>OHE Isolation: <strong className="text-amber-600 dark:text-amber-400">{selectedTask.ohe_required ? "REQUIRED" : "NOT REQUIRED"}</strong></div>
+                  <div>Machine: <strong className="text-slate-900 dark:text-white">{selectedTask.machine_required || "Manual Track Crew"}</strong></div>
+                  <div>Crew Needed: <strong className="text-slate-900 dark:text-white">{selectedTask.crew_required} personnel</strong></div>
                 </div>
 
                 {/* Safety Classification Logic */}
-                <div className="space-y-1">
-                  <div className="text-[10px] text-slate-400 uppercase font-bold">Safety Rule Justification</div>
-                  <p className="text-xs text-slate-700 font-sans bg-slate-50 p-2.5 rounded border border-slate-200 leading-relaxed">
+                <div className="space-y-1.5">
+                  <div className="text-xs text-slate-500 dark:text-slate-400 uppercase font-black">Safety Rule Justification</div>
+                  <p className="text-xs text-slate-800 dark:text-slate-200 font-sans bg-slate-50 dark:bg-slate-950/60 p-3 rounded-xl border border-slate-200 dark:border-slate-800 leading-relaxed">
                     {selectedTask.safety_tier_reason}
                   </p>
                 </div>
 
                 {/* ML Ranking Score */}
-                <div className="p-3 bg-blue-50/70 rounded border border-blue-200 space-y-1 text-[11px]">
-                  <div className="flex items-center justify-between font-bold text-blue-950">
+                <div className="p-3.5 bg-blue-50/70 dark:bg-blue-950/40 rounded-xl border border-blue-200 dark:border-blue-800 space-y-1.5 text-xs">
+                  <div className="flex items-center justify-between font-black text-blue-950 dark:text-blue-200 text-sm">
                     <span>XGBoost Ranking Score</span>
                     <span>{selectedTask.ml_ranking_score.toFixed(3)}</span>
                   </div>
-                  <div className="text-[10px] text-blue-800 font-sans">
+                  <div className="text-xs text-blue-800 dark:text-blue-300 font-sans leading-relaxed">
                     Within-tier Rank #{selectedTask.within_tier_rank} among {selectedTask.safety_tier} demands. Note: ML ranks strictly within safety tiers; it never overrides P1–P4 safety boundaries.
                   </div>
                 </div>
               </div>
 
               {/* Drawer Footer */}
-              <div className="p-3 bg-slate-50 border-t border-slate-200 flex justify-between items-center shrink-0">
+              <div className="p-4 bg-slate-50 dark:bg-slate-950/60 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center shrink-0">
                 <Link
                   href="/plan"
-                  className="px-3 py-1.5 bg-blue-900 hover:bg-blue-800 text-white rounded font-bold text-xs flex items-center gap-1"
+                  className="px-4 py-2 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white rounded-xl font-bold text-xs flex items-center gap-1.5 shadow-md shadow-orange-500/20 transition-all"
                 >
                   <span>Locate in Plan</span>
-                  <ExternalLink className="w-3 h-3" />
+                  <ExternalLink className="w-3.5 h-3.5" />
                 </Link>
                 <button
                   onClick={() => setSelectedTask(null)}
-                  className="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded font-medium text-xs"
+                  className="px-4 py-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl font-bold text-xs transition-all cursor-pointer"
                 >
                   Close
                 </button>

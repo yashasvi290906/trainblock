@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 };
 
 import { PlanningRunProvider } from "@/context/PlanningRunContext";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 export default function RootLayout({
   children,
@@ -28,13 +29,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${ibmPlexSans.variable} ${ibmPlexMono.variable} font-sans bg-slate-50 text-slate-900 antialiased selection:bg-blue-600 selection:text-white min-h-screen`}
+        className={`${ibmPlexSans.variable} ${ibmPlexMono.variable} font-sans bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased selection:bg-blue-600 selection:text-white min-h-screen transition-colors duration-200`}
       >
-        <PlanningRunProvider>
-          {children}
-        </PlanningRunProvider>
+        <ThemeProvider>
+          <PlanningRunProvider>
+            {children}
+          </PlanningRunProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

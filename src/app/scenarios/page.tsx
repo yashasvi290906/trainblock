@@ -106,7 +106,7 @@ export default function ScenariosPage() {
   const handleSimulateBlockDenial = () => {
     setActiveCondition("BLOCK_DENIAL");
     setScenarioState("DENIED");
-    denyBlock().catch(console.error);
+    denyBlock("BLK-2026-103").catch(console.error);
     addAuditEvent(
       "BLOCK DENIAL RECEIVED FROM OPERATING",
       "Divisional Operating Control cancelled requested window B-014 (02:20–04:10) due to corridor congestion. Sent to live planning engine.",
