@@ -7,7 +7,7 @@
 
 ## 1. One-Line Description
 
-RAILBLOCK is an AI-assisted railway maintenance block planning control desk that balances high-density passenger/freight train operations with critical asset maintenance by deterministically grouping cross-departmental work orders and solving mathematically optimal corridor possession windows using Google OR-Tools CP-SAT and XGBoost within-tier ranking.
+RAILBLOCK is an AI-assisted railway maintenance block planning control desk that balances high-density passenger/freight train operations with critical asset maintenance by solving a constrained corridor possession optimization model using OR-Tools CP-SAT and XGBoost within-tier ranking (decision-support prototype; not claiming autonomous railway possession granting).
 
 ---
 
@@ -333,7 +333,7 @@ RETURN NEW PLANNING RUN TO FRONTEND
 3. **Emergency Critical Task Injection**:  
    A field ultrasonic inspection identifies a severe rail crack. A new P1 task is injected into TMS, prioritized, clustered, and scheduled into the next available safe window via CP-SAT.
 4. **Unscheduled Freight Rake Injection**:  
-   An urgent container/coal train is injected into FOIS freight forecasts. Windows intersecting the freight path are de-conflicted and replanned.
+   An urgent container/coal train is injected into the Synthetic Freight Forecast (FOIS-aligned reference concept; no live FOIS API accessed). Windows intersecting the freight path are de-conflicted and replanned.
 5. **26-Week Horizon Roll-Forward**:  
    The programme advances by +1 week (`W01 → History`, `W02 → W01`), tracking completed, deferred, shifted, and newly critical demands.
 
@@ -346,7 +346,7 @@ RETURN NEW PLANNING RUN TO FRONTEND
 | **24-Hour Tactical (Execution)** | Current day possessions | Real-time candidate window matching & dispatch verification | **Genuinely CP-SAT Optimized** |
 | **7-Day Weekly Plan (Coordinated)** | Week 1 active block schedule | Full CP-SAT multi-objective optimization across all 6 corridor sections | **Genuinely CP-SAT Optimized** |
 | **1-Month Plan (Reserved)** | 28 days (Weeks 1 to 4) | Direct deterministic derivation from Weeks 1–4 of the rolling programme | **Derived from Rolling Horizon** |
-| **26-Week Rolling Programme** | 6-month strategic view | Weeks 1..4 (Executing/Coordinated), Weeks 5..12 (Reserved), Weeks 13..26 (Strategic) | **Dynamic Rolling Model** |
+| **26-Week Rolling Programme** | 6-month strategic view | Weeks 1..4 (Executing/Coordinated), Weeks 5..26 (Synthetic reservation and strategic capacity placeholders) | **Dynamic Rolling Model** |
 
 ---
 
@@ -422,7 +422,7 @@ Base URL: `http://localhost:8000` (FastAPI Swagger Docs available at `http://loc
 | `GET` | `/export/bdms/download`| Downloads BDMS requisition JSON | Query: `run_id` | JSON File Attachment | Plan Desk / Decision |
 | `GET` | `/export/bdms/csv` | Downloads BDMS CSV manifest | Query: `run_id` | CSV File Attachment | Decision / Exports |
 | `GET` | `/export/backtest/csv` | Downloads comparative backtest CSV | None | CSV File Attachment | Analysis Desk |
-| `GET` | `/export/validation/certificate` | Downloads 8-rule safety certificate | None | TXT File Attachment | Reports Desk |
+| `GET` | `/export/validation/certificate` | Downloads prototype validation report / certificate | None | TXT File Attachment | Reports Desk |
 | `GET` | `/runs/current` | Active `PlanningRun` state | None | `PlanningRun` | `PlanningRunContext` (Global) |
 | `POST` | `/runs/reset` | Resets demo state to canonical baseline | None | `PlanningRun` | Top Bar / Reset Demo |
 | `POST` | `/runs/replan` | Re-executes CP-SAT on active state | None | `PlanningRun` | Plan Desk / Replan |
