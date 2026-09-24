@@ -32,7 +32,7 @@ import { usePlanningRun } from "@/context/PlanningRunContext";
 
 export default function ScenariosPage() {
   const router = useRouter();
-  const { currentRun, loading: engineLoading, isBackend, denyBlock, addCriticalTask, resetDemo } = usePlanningRun();
+  const { currentRun, loading: engineLoading, isBackend, denyBlock, addCriticalTask, overrunBlock, injectFreight, resetDemo } = usePlanningRun();
 
   // Active condition and scenario lifecycle state
   const [activeCondition, setActiveCondition] = useState<ScenarioCondition>("BLOCK_DENIAL");
@@ -106,10 +106,11 @@ export default function ScenariosPage() {
   const handleSimulateBlockDenial = () => {
     setActiveCondition("BLOCK_DENIAL");
     setScenarioState("DENIED");
-    denyBlock("BLK-2026-103").catch(console.error);
+    const targetBlockId = currentRun?.weekly_plan?.[0]?.block_id || "B-014";
+    denyBlock(targetBlockId).catch(console.error);
     addAuditEvent(
       "BLOCK DENIAL RECEIVED FROM OPERATING",
-      "Divisional Operating Control cancelled requested window B-014 (02:20–04:10) due to corridor congestion. Sent to live planning engine.",
+      `Divisional Operating Control cancelled requested window ${targetBlockId} due to corridor congestion. Sent to live planning engine.`,
       "OPERATING"
     );
     addAuditEvent(
@@ -293,7 +294,7 @@ export default function ScenariosPage() {
 
   return (
     <AppShell pageTitle="Scenario Lab" subtitle="Test operational changes before committing the block">
-      <div className="flex flex-col h-[calc(100vh-64px)] bg-slate-950 text-slate-100 overflow-y-auto select-none font-sans">
+      <div className="flex flex-col h-[calc(100vh-64px)] bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-y-auto select-none font-sans">
         {/* 1. TOP HEADER */}
         <ScenarioHeader
           activeConditionLabel={conditionLabel}
@@ -326,7 +327,7 @@ export default function ScenariosPage() {
         />
 
         {/* 3. SCENARIO TIMELINE STEPPER */}
-        <div className="px-4 py-2 sm:px-6 bg-slate-950">
+        <div className="px-4 py-2 sm:px-6 bg-slate-50 dark:bg-slate-950">
           <ScenarioTimeline
             condition={activeCondition}
             scenarioState={scenarioState}

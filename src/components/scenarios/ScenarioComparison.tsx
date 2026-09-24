@@ -126,12 +126,12 @@ export function ScenarioComparison({
   ];
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3 font-mono shadow-sm">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 space-y-3 font-mono shadow-xs">
       {/* Header & Change Badges */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-slate-200 dark:border-slate-800">
         <div className="flex items-center gap-2">
-          <GitCompare className="w-4 h-4 text-blue-400" />
-          <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+          <GitCompare className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+          <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
             PLAN COMPARISON: BASELINE vs SCENARIO
           </h3>
         </div>
@@ -139,14 +139,14 @@ export function ScenarioComparison({
         {/* Change Indicators */}
         <div className="flex items-center gap-2 text-[10px] flex-wrap">
           {isReplanned && (
-            <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700/50 font-bold flex items-center gap-1">
+            <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/50 font-bold flex items-center gap-1">
               <span>WINDOW: 02:20–04:10</span>
               <ArrowRight className="w-3 h-3" />
               <span>{selectedWindow.startTime}–{selectedWindow.endTime}</span>
             </span>
           )}
           {isReplanned && (
-            <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700/50 font-bold flex items-center gap-1">
+            <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/50 font-bold flex items-center gap-1">
               <span>PASSENGER CONFLICT: 1</span>
               <ArrowRight className="w-3 h-3" />
               <span>{selectedWindow.passengerConflicts}</span>
@@ -159,33 +159,33 @@ export function ScenarioComparison({
       <div className="overflow-x-auto">
         <table className="w-full text-xs text-left">
           <thead>
-            <tr className="border-b border-slate-800 text-[10px] text-slate-400 uppercase">
+            <tr className="border-b border-slate-200 dark:border-slate-800 text-[10px] text-slate-500 dark:text-slate-400 uppercase">
               <th className="py-2 px-3">Operational Factor</th>
               <th className="py-2 px-3">Baseline Plan (B-014)</th>
               <th className="py-2 px-3">Scenario Plan ({isReplanned ? selectedWindow.code : condition})</th>
               <th className="py-2 px-3 text-right">Delta / Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60 font-mono text-[11px]">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-mono text-[11px]">
             {comparisonRows.map((row, idx) => (
               <tr
                 key={idx}
                 className={cn(
-                  "hover:bg-slate-800/40 transition-colors",
-                  row.changed ? "bg-blue-950/20" : ""
+                  "hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors",
+                  row.changed ? "bg-blue-50/50 dark:bg-blue-950/20" : ""
                 )}
               >
-                <td className="py-2 px-3 text-slate-300 font-medium">{row.factor}</td>
-                <td className="py-2 px-3 text-slate-400">{row.baseline}</td>
+                <td className="py-2 px-3 text-slate-800 dark:text-slate-300 font-medium">{row.factor}</td>
+                <td className="py-2 px-3 text-slate-500 dark:text-slate-400">{row.baseline}</td>
                 <td className="py-2 px-3">
                   <span
                     className={cn(
                       "font-semibold",
                       row.changed
                         ? row.isPositive
-                          ? "text-emerald-400"
-                          : "text-amber-400"
-                        : "text-white"
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-amber-600 dark:text-amber-400"
+                        : "text-slate-900 dark:text-white"
                     )}
                   >
                     {row.scenario}
@@ -197,14 +197,14 @@ export function ScenarioComparison({
                       className={cn(
                         "px-1.5 py-0.5 rounded text-[9px] font-bold",
                         row.isPositive
-                          ? "bg-emerald-950 text-emerald-300 border border-emerald-800/60"
-                          : "bg-amber-950 text-amber-300 border border-amber-800/60"
+                          ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800/60"
+                          : "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-300 dark:border-amber-800/60"
                       )}
                     >
                       MODIFIED
                     </span>
                   ) : (
-                    <span className="text-slate-600 text-[10px]">UNCHANGED</span>
+                    <span className="text-slate-400 dark:text-slate-600 text-[10px]">UNCHANGED</span>
                   )}
                 </td>
               </tr>

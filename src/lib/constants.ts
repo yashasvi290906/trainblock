@@ -8,7 +8,7 @@ export const APP_CONFIG = {
   lineType: "Double Line (KM 40–120)",
   problemStatementId: "26027",
   hackathon: "Smart India Hackathon 2026",
-  environmentTag: "Prototype Scenario · Synthetic CAG-calibrated Data",
+  environmentTag: "Prototype Scenario · Synthetic Data Calibration",
   syntheticDateTime: "21 Sep 2026 · 02:14:00 IST",
 };
 
@@ -44,6 +44,19 @@ export const PRIMARY_NAVIGATION: PrimaryNavItem[] = [
     ],
   },
   {
+    key: "roles",
+    label: "ROLES",
+    href: "/station-master",
+    icon: "Users",
+    description: "Operational role desks: Station Master, Department, Divisional Administration",
+    matchingRoutes: ["/station-master", "/department", "/administration"],
+    subItems: [
+      { label: "Station Master", href: "/station-master" },
+      { label: "Department", href: "/department" },
+      { label: "Divisional Admin", href: "/administration" },
+    ],
+  },
+  {
     key: "work-orders",
     label: "WORK ORDERS",
     href: "/work-register",
@@ -73,7 +86,7 @@ export const PRIMARY_NAVIGATION: PrimaryNavItem[] = [
     href: "/scenarios",
     icon: "Sliders",
     description: "Test operational disruptions and alternative slot replanning",
-    matchingRoutes: ["/scenarios"],
+    matchingRoutes: ["/scenarios", "/what-if"],
     subItems: [
       { label: "Disruption Scenarios", href: "/scenarios" },
     ],
@@ -95,7 +108,7 @@ export const PRIMARY_NAVIGATION: PrimaryNavItem[] = [
     href: "/reports",
     icon: "BarChart3",
     description: "Planning evidence, constraint outcomes, and benchmarking analysis",
-    matchingRoutes: ["/reports", "/analysis", "/siloed-vs-integrated"],
+    matchingRoutes: ["/reports", "/analysis", "/siloed-vs-integrated", "/evidence"],
     subItems: [
       { label: "Planning Evidence", href: "/reports" },
       { label: "Quantitative Backtest", href: "/analysis" },

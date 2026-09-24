@@ -312,6 +312,23 @@ class AuditLogEntry(BaseModel):
     details: str
     planning_run_id: str
 
+class RollingWeekItem(BaseModel):
+    week_number: int
+    week_label: str
+    total_demands: int
+    p1_demands: int
+    planned_blocks_count: int
+    reserved_hours: float
+    status: Literal["EXECUTING", "COORDINATED", "RESERVED", "STRATEGIC"]
+    change_category: Literal["COMPLETED", "DEFERRED", "NEWLY_CRITICAL", "SHIFTED", "UNCHANGED"] = "UNCHANGED"
+
+class RollingProgramme(BaseModel):
+    current_week: int = 1
+    total_weeks: int = 26
+    weeks: List[RollingWeekItem]
+    last_roll_forward: Optional[str] = None
+    roll_forward_deltas: Optional[Dict[str, int]] = None
+
 class PlanningRun(BaseModel):
     planning_run_id: str
     created_at: str
@@ -324,13 +341,17 @@ class PlanningRun(BaseModel):
     composition_clusters: List[CompositionCluster]
     weekly_plan: List[PlannedBlock]
     monthly_plan: List[MonthlyPlanReservation]
+    rolling_programme: Optional[RollingProgramme] = None
+    train_movements: List[CoaTrain] = []
+    freight_forecasts: List[GoodsForecast] = []
     validation_result: ValidationReport
     backtest_result: BacktestResult
     solver_result: SolverResult
-    decision_status: Literal["PENDING_REVIEW", "APPROVED", "OVERRIDDEN", "REPLANNED"]
+    decision_status: Literal["PENDING_REVIEW", "APPROVED", "OVERRIDDEN", "REPLANNED", "DEFERRED"]
     approved_by: Optional[str] = None
     approval_timestamp: Optional[str] = None
     override_reason: Optional[str] = None
     bdms_exports: List[BdmsExport]
     audit_events: List[AuditLogEntry]
+
 

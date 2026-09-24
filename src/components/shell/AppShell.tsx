@@ -21,6 +21,13 @@ export function AppShell({ children }: AppShellProps) {
 
   // Find active primary section to render contextual sub-navigation tabs
   const activeSection = PRIMARY_NAVIGATION.find((item) => {
+    if (item.key === "roles") {
+      return (
+        pathname === "/station-master" ||
+        pathname === "/department" ||
+        pathname === "/administration"
+      );
+    }
     if (item.key === "plan") {
       return (
         pathname === "/plan" ||
@@ -37,10 +44,10 @@ export function AppShell({ children }: AppShellProps) {
       return pathname === "/live-corridor" || pathname === "/time-distance";
     }
     if (item.key === "what-if") {
-      return pathname.startsWith("/scenarios");
+      return pathname.startsWith("/scenarios") || pathname.startsWith("/what-if");
     }
     if (item.key === "reports") {
-      return pathname === "/reports" || pathname === "/analysis" || pathname === "/siloed-vs-integrated";
+      return pathname === "/reports" || pathname === "/analysis" || pathname === "/siloed-vs-integrated" || pathname === "/evidence";
     }
     return pathname === item.href;
   }) || PRIMARY_NAVIGATION[0];
@@ -49,6 +56,11 @@ export function AppShell({ children }: AppShellProps) {
     <div className="relative flex flex-col h-screen w-screen overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
       {/* Personalized Ambient Railway Background Layer */}
       <RailwayAmbientBackground />
+
+      {/* Persistent Synthetic Operational Topology Disclosure */}
+      <div className="bg-amber-500/15 border-b border-amber-500/30 px-3 py-1 text-center text-[10px] font-mono font-bold text-amber-800 dark:text-amber-300 z-30 shrink-0">
+        SYNTHETIC OPERATIONAL TOPOLOGY — NOT LIVE RAILWAY DATA · Modeled from operational standards (TMS/SMMS/TDMS/COA/FOIS reference concepts) — not an RDSO certification.
+      </div>
 
       {/* 1. Global Workstation Header */}
       <Header

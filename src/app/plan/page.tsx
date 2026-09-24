@@ -48,12 +48,12 @@ export default function PlanPage() {
   const tasks: NormalizedTask[] = currentRun?.prioritized_tasks || [];
   const deferredTasks: NormalizedTask[] = (currentRun?.solver_result?.unassigned_tasks as unknown as NormalizedTask[]) || [];
 
-  // Default selected block is the first block or highlighted B-014 / BLK-2026-103
-  const activeBlock: PlannedBlock = useMemo(() => {
+  // Default selected block is the first block
+  const activeBlock: PlannedBlock | null = useMemo(() => {
     if (selectedBlockId) {
-      return blocks.find((b) => b.block_id === selectedBlockId) || blocks[0];
+      return blocks.find((b) => b.block_id === selectedBlockId) || blocks[0] || null;
     }
-    return blocks.find((b) => b.block_id === "BLK-2026-103") || blocks[0];
+    return blocks[0] || null;
   }, [blocks, selectedBlockId]);
 
   // Filter tasks for the left queue

@@ -1,5 +1,5 @@
 import time
-from typing import List, Dict, Tuple, Any
+from typing import List, Dict, Tuple, Any, Optional
 from ortools.sat.python import cp_model
 
 from ..models.schemas import (
@@ -139,7 +139,9 @@ class CpSatPlanner:
         trains: List[CoaTrain],
         goods_forecasts: List[GoodsForecast],
         corridors: List[BlockCorridor],
-        time_limit_sec: float = 10.0
+        time_limit_sec: float = 10.0,
+        denied_block_ids: Optional[List[str]] = None,
+        denied_windows: Optional[List[Dict[str, Any]]] = None
     ) -> SolverResult:
         """
         Executes CP-SAT solver to find optimal non-conflicting block schedule.
@@ -147,6 +149,8 @@ class CpSatPlanner:
         start_time = time.time()
         model = cp_model.CpModel()
         candidate_windows = self._generate_candidate_windows(corridors)
+        denied_ids = set(denied_block_ids or [])
+        denied_win_specs = denied_windows or []
 
         # Dictionary of cluster_id -> list of candidate assignment variable dicts
         cluster_assignment_vars: Dict[str, List[Dict[str, Any]]] = {c.cluster_id: [] for c in clusters}
@@ -176,6 +180,22 @@ class CpSatPlanner:
                 # Valid candidate! Create binary decision variable x_{c,w}
                 var_name = f"x_{cluster.cluster_id}_{win['window_id']}"
                 x_var = model.NewBoolVar(var_name)
+
+                # Check if this cluster/window is denied
+                is_denied = False
+                if any(did in var_name or did == cluster.cluster_id or did == win["window_id"] for did in denied_ids):
+                    is_denied = True
+                
+                if not is_denied and denied_win_specs:
+                    for dw in denied_win_specs:
+                        if (win["section_id"] == dw.get("section_id") and
+                            (win["line"] == dw.get("line") or dw.get("line") == "BOTH") and
+                            abs(win["start_min"] - dw.get("start_min", -9999)) < 45):
+                            is_denied = True
+                            break
+
+                if is_denied:
+                    model.Add(x_var == 0)
                 
                 record = {
                     "x_var": x_var,

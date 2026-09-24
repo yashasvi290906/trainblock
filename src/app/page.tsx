@@ -34,13 +34,13 @@ export default function HomePage() {
   const { theme, toggleTheme } = useTheme();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // Derived KPIs from live planning engine
+  // Derived KPIs from live planning engine - NO fabricated operational fallbacks
   const runId = currentRun?.planning_run_id ?? null;
-  const totalDemands = currentRun?.input_summary?.total_maintenance_demands ?? 47;
-  const totalClusters = currentRun?.composition_clusters?.length ?? 14;
-  const totalBlocks = currentRun?.weekly_plan?.length ?? 8;
-  const solverStatus = currentRun?.solver_result?.solver_status ?? "OPTIMAL";
-  const solveTimeMs = currentRun?.solver_result?.solve_time_ms ? currentRun.solver_result.solve_time_ms.toFixed(1) : "14.2";
+  const totalDemands = currentRun?.input_summary?.total_maintenance_demands ?? (loading ? "…" : "—");
+  const totalClusters = currentRun?.composition_clusters?.length ?? (loading ? "…" : "—");
+  const totalBlocks = currentRun?.weekly_plan?.length ?? (loading ? "…" : "—");
+  const solverStatus = currentRun?.solver_result?.solver_status ?? (loading ? "SOLVING" : "READY");
+  const solveTimeMs = currentRun?.solver_result?.solve_time_ms != null ? currentRun.solver_result.solve_time_ms.toFixed(1) : (loading ? "…" : "—");
   const isValidated = currentRun?.validation_result?.overall_status === "VALIDATED";
 
   // P1 coverage computed from engine data
@@ -48,7 +48,7 @@ export default function HomePage() {
   const assignedP1 = p1Tasks.filter((t) =>
     currentRun?.weekly_plan?.some((b) => b.tasks?.some((bt) => bt.task_id === t.task_id))
   ).length;
-  const p1CoveragePct = p1Tasks.length > 0 ? Math.round((assignedP1 / p1Tasks.length) * 100) : 100;
+  const p1CoveragePct = p1Tasks.length > 0 ? `${Math.round((assignedP1 / p1Tasks.length) * 100)}%` : (loading ? "…" : "—");
 
   // Active possession block
   const activeBlock = currentRun?.weekly_plan?.[0] ?? null;
@@ -82,11 +82,11 @@ export default function HomePage() {
         <div className="flex items-center gap-2 sm:gap-3 text-xs font-mono">
           <div className="hidden md:flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-white/10 text-xs">
             <span className="text-slate-400 font-medium">RUN:</span>
-            <span className="font-bold text-white">{runId ?? (loading ? "…" : "RB-2026")}</span>
+            <span className="font-bold text-white">{runId ?? (loading ? "…" : "OFFLINE")}</span>
             <span className="text-slate-700">|</span>
             <span className="flex items-center gap-1 font-bold text-emerald-400">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>{solverStatus} ({solveTimeMs}ms)</span>
+              <span>{solverStatus} {solveTimeMs !== "—" && `(${solveTimeMs}ms)`}</span>
             </span>
           </div>
 
@@ -120,6 +120,20 @@ export default function HomePage() {
         </div>
       </header>
 
+      {/* Persistent Synthetic Operational Topology Disclosure Banner */}
+      <div className="bg-amber-950/80 border-b border-amber-500/30 px-4 py-2 text-xs font-mono text-amber-200 flex items-center justify-between shrink-0 shadow-inner">
+        <div className="flex items-center gap-2 max-w-5xl">
+          <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
+          <span className="font-semibold text-amber-300 uppercase tracking-wider text-[11px] shrink-0">Operational Data Note:</span>
+          <span className="text-amber-200/90 text-xs">
+            Corridors, assets, and trains shown are synthetically modeled for the South Central Railway SEC–NDL section (SIH PS 26027). Production deployment interfaces directly with CRIS COA / ICMS / FOIS via REST / Kafka.
+          </span>
+        </div>
+        <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] bg-amber-900/60 border border-amber-600/40 text-amber-300 shrink-0 font-bold">
+          SIH 2026 DEMO BENCHMARK
+        </span>
+      </div>
+
       {/* 2. MAIN WORKSPACE CONTAINER */}
       <main className="flex-1 max-w-[1580px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
         {/* Loading / Offline notifications */}
@@ -128,7 +142,7 @@ export default function HomePage() {
 
         {/* ============================================================== */}
         {/* SECTION 1: BLOCK PLANNING PORTAL HERO + ROLE SELECTION          */}
-        {/* Exact reference implementation of updated_frontend.png         */}
+        {/* Dedicated Entry Points to Station Master, Dept & Administration */}
         {/* ============================================================== */}
         <section className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-[#090D17]">
           <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[520px]">
@@ -180,15 +194,15 @@ export default function HomePage() {
                   Select Your <span className="text-orange-500">Role</span>
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-400 font-medium">
-                  Choose your operational role to access the portal.
+                  Choose your dedicated operational desk to access live planning & control actions.
                 </p>
               </div>
 
               {/* 3 Interactive Role Cards */}
               <div className="relative z-10 space-y-3.5">
-                {/* ROLE 1: Station Master */}
+                {/* ROLE 1: Station Master - Dedicated Route */}
                 <Link
-                  href="/work-register"
+                  href="/station-master"
                   className="group flex items-center justify-between p-4 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-amber-500/50 backdrop-blur-xl transition-all duration-200 shadow-md hover:shadow-amber-500/10"
                 >
                   <div className="flex items-center gap-4">
@@ -196,20 +210,25 @@ export default function HomePage() {
                       <TrainTrack className="w-6 h-6" />
                     </div>
                     <div className="space-y-0.5">
-                      <h3 className="font-black text-base text-white group-hover:text-amber-400 transition-colors">
-                        Station Master
-                      </h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-black text-base text-white group-hover:text-amber-400 transition-colors">
+                          Station Master
+                        </h3>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">
+                          LOCAL DESK
+                        </span>
+                      </div>
                       <p className="text-xs text-slate-400 font-medium leading-normal">
-                        Report defects, track complaints, respond to clarifications
+                        Station occupancy, upcoming block impact, local checks & operational consent
                       </p>
                     </div>
                   </div>
                   <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-amber-400 group-hover:translate-x-1 transition-all shrink-0 ml-2" />
                 </Link>
 
-                {/* ROLE 2: Department (Engineering / S&T / TRD) */}
+                {/* ROLE 2: Department (Engineering / S&T / TRD) - Dedicated Route */}
                 <Link
-                  href="/plan"
+                  href="/department"
                   className="group flex items-center justify-between p-4 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-cyan-500/50 backdrop-blur-xl transition-all duration-200 shadow-md hover:shadow-cyan-500/10"
                 >
                   <div className="flex items-center gap-4">
@@ -217,20 +236,25 @@ export default function HomePage() {
                       <Layers className="w-6 h-6" />
                     </div>
                     <div className="space-y-0.5">
-                      <h3 className="font-black text-base text-white group-hover:text-cyan-400 transition-colors">
-                        Department
-                      </h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-black text-base text-white group-hover:text-cyan-400 transition-colors">
+                          Department Desk
+                        </h3>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold">
+                          ENG · S&T · TRD
+                        </span>
+                      </div>
                       <p className="text-xs text-slate-400 font-medium leading-normal">
-                        Technical assessments, complaint review, task creation
+                        Work register, priority triage, asset readiness checklist & block demands
                       </p>
                     </div>
                   </div>
                   <ChevronRight className="w-5 h-5 text-slate-500 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all shrink-0 ml-2" />
                 </Link>
 
-                {/* ROLE 3: Administrator (Chief Block Planner) */}
+                {/* ROLE 3: Divisional Administration - Dedicated Route */}
                 <Link
-                  href="/scenarios"
+                  href="/administration"
                   className="group flex items-center justify-between p-4 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-purple-500/50 backdrop-blur-xl transition-all duration-200 shadow-md hover:shadow-purple-500/10"
                 >
                   <div className="flex items-center gap-4">
@@ -238,11 +262,16 @@ export default function HomePage() {
                       <ShieldCheck className="w-6 h-6" />
                     </div>
                     <div className="space-y-0.5">
-                      <h3 className="font-black text-base text-white group-hover:text-purple-400 transition-colors">
-                        Administrator
-                      </h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-black text-base text-white group-hover:text-purple-400 transition-colors">
+                          Divisional Administration
+                        </h3>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40 font-bold">
+                          CONTROL & PLANNING
+                        </span>
+                      </div>
                       <p className="text-xs text-slate-400 font-medium leading-normal">
-                        System monitoring, role governance, audit administration
+                        Plan approvals, 26-week rolling programme, policy overrides & backtest audit
                       </p>
                     </div>
                   </div>

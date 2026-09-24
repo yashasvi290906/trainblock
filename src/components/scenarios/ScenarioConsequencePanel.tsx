@@ -126,13 +126,13 @@ export function ScenarioConsequencePanel({
     : `/plan`;
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between space-y-4 shadow-sm h-full font-mono">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex flex-col justify-between space-y-4 shadow-xs h-full font-mono">
       <div className="space-y-3">
         {/* Header */}
-        <div className="flex items-center justify-between pb-2.5 border-b border-slate-800">
+        <div className="flex items-center justify-between pb-2.5 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2">
-            <Activity className="w-4 h-4 text-amber-400" />
-            <span className="text-xs font-bold text-white uppercase tracking-wider">
+            <Activity className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+            <span className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
               SCENARIO CONSEQUENCES
             </span>
           </div>
@@ -140,10 +140,10 @@ export function ScenarioConsequencePanel({
             className={cn(
               "text-[10px] px-2 py-0.5 rounded font-bold border",
               isReplanned || statusText === "BASE PLAN ACTIVE"
-                ? "bg-emerald-950 text-emerald-300 border-emerald-700/50"
+                ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border-emerald-300 dark:border-emerald-700/50"
                 : isDenied || isInsufficient || isConflict
-                ? "bg-rose-950 text-rose-300 border-rose-700/50"
-                : "bg-blue-950 text-blue-300 border-blue-700/50"
+                ? "bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300 border-rose-300 dark:border-rose-700/50"
+                : "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 border-blue-300 dark:border-blue-700/50"
             )}
           >
             {statusText}
@@ -151,69 +151,69 @@ export function ScenarioConsequencePanel({
         </div>
 
         {/* Operational Fact Matrix */}
-        <div className="bg-slate-950/80 p-3 rounded-lg border border-slate-800 space-y-2 text-xs">
-          <div className="flex justify-between items-center py-0.5 border-b border-slate-800/60">
-            <span className="text-slate-400">BLOCK WINDOW</span>
-            <span className="text-white font-bold">{blockWindow}</span>
+        <div className="bg-slate-50 dark:bg-slate-950/80 p-3 rounded-lg border border-slate-200 dark:border-slate-800 space-y-2 text-xs">
+          <div className="flex justify-between items-center py-0.5 border-b border-slate-200 dark:border-slate-800/60">
+            <span className="text-slate-500 dark:text-slate-400">BLOCK WINDOW</span>
+            <span className="text-slate-900 dark:text-white font-bold">{blockWindow}</span>
           </div>
 
-          <div className="flex justify-between items-center py-0.5 border-b border-slate-800/60">
-            <span className="text-slate-400">WORK DEMAND</span>
-            <span className="text-white font-semibold">{workOrders}</span>
+          <div className="flex justify-between items-center py-0.5 border-b border-slate-200 dark:border-slate-800/60">
+            <span className="text-slate-500 dark:text-slate-400">WORK DEMAND</span>
+            <span className="text-slate-900 dark:text-white font-semibold">{workOrders}</span>
           </div>
 
-          <div className="flex justify-between items-center py-0.5 border-b border-slate-800/60">
-            <span className="text-slate-400">P1 CRITICAL</span>
-            <span className="text-rose-400 font-bold">{p1Count}</span>
+          <div className="flex justify-between items-center py-0.5 border-b border-slate-200 dark:border-slate-800/60">
+            <span className="text-slate-500 dark:text-slate-400">P1 CRITICAL</span>
+            <span className="text-rose-600 dark:text-rose-400 font-bold">{p1Count}</span>
           </div>
 
-          <div className="flex justify-between items-center py-0.5 border-b border-slate-800/60">
-            <span className="text-slate-400">PASSENGER CONFLICTS</span>
+          <div className="flex justify-between items-center py-0.5 border-b border-slate-200 dark:border-slate-800/60">
+            <span className="text-slate-500 dark:text-slate-400">PASSENGER CONFLICTS</span>
             <span
               className={cn(
                 "font-bold",
-                passengerConflicts === 0 ? "text-emerald-400" : "text-amber-400"
+                passengerConflicts === 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"
               )}
             >
               {passengerConflicts} {passengerConflicts === 0 ? "(Protected)" : "(Conflict)"}
             </span>
           </div>
 
-          <div className="flex justify-between items-center py-0.5 border-b border-slate-800/60">
-            <span className="text-slate-400">GOODS FORECAST</span>
-            <span className="text-blue-300">Checked · 1 Slot</span>
+          <div className="flex justify-between items-center py-0.5 border-b border-slate-200 dark:border-slate-800/60">
+            <span className="text-slate-500 dark:text-slate-400">GOODS FORECAST</span>
+            <span className="text-blue-600 dark:text-blue-300">Checked · 1 Slot</span>
           </div>
 
           <div className="flex justify-between items-center py-0.5">
-            <span className="text-slate-400">USABLE WORK TIME</span>
-            <span className="text-emerald-400 font-bold">{usableWorkTime}</span>
+            <span className="text-slate-500 dark:text-slate-400">USABLE WORK TIME</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-bold">{usableWorkTime}</span>
           </div>
         </div>
 
         {/* WHY DID THE PLAN CHANGE? */}
-        <div className="bg-slate-950/90 p-3 rounded-lg border border-slate-800 space-y-1.5">
-          <div className="flex items-center gap-1.5 text-blue-400 text-[11px] font-bold">
+        <div className="bg-slate-50 dark:bg-slate-950/90 p-3 rounded-lg border border-slate-200 dark:border-slate-800 space-y-1.5">
+          <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 text-[11px] font-bold">
             <HelpCircle className="w-3.5 h-3.5" />
             <span>WHY DID THE PLAN CHANGE?</span>
           </div>
-          <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
+          <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
             {whyChangedText}
           </p>
         </div>
       </div>
 
       {/* Human-In-The-Loop Actions */}
-      <div className="pt-3 border-t border-slate-800 space-y-2">
-        <span className="text-[10px] text-slate-400 uppercase tracking-wider block font-bold">
+      <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2">
+        <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider block font-bold">
           PLANNER REVIEW ACTIONS:
         </span>
 
         <Link
           href={planUrl}
           className={cn(
-            "w-full py-2.5 px-3 rounded-lg font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all",
+            "w-full py-2.5 px-3 rounded-lg font-mono font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all",
             isReplanned
-              ? "bg-emerald-600 hover:bg-emerald-500 text-slate-950"
+              ? "bg-emerald-600 hover:bg-emerald-500 text-white"
               : "bg-blue-600 hover:bg-blue-500 text-white"
           )}
         >
@@ -224,15 +224,15 @@ export function ScenarioConsequencePanel({
         <div className="grid grid-cols-2 gap-2">
           <Link
             href="/live-corridor"
-            className="py-1.5 px-2 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-200 font-mono text-[11px] rounded flex items-center justify-center gap-1 text-center"
+            className="py-1.5 px-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-mono text-[11px] rounded flex items-center justify-center gap-1 text-center"
           >
-            <Train className="w-3 h-3 text-blue-400" />
+            <Train className="w-3 h-3 text-blue-600 dark:text-blue-400" />
             <span>Live Corridor</span>
           </Link>
 
           <button
             onClick={onKeepBaseline}
-            className="py-1.5 px-2 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-amber-300 font-mono text-[11px] rounded flex items-center justify-center gap-1 text-center"
+            className="py-1.5 px-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 border border-slate-200 dark:border-slate-700 text-amber-700 dark:text-amber-300 font-mono text-[11px] rounded flex items-center justify-center gap-1 text-center"
           >
             <span>Keep Base</span>
           </button>

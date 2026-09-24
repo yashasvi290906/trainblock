@@ -120,6 +120,56 @@ export interface MonthlyPlanReservation {
   planned_block_hours: number;
 }
 
+export interface RollingWeekItem {
+  week_number: number;
+  week_label: string;
+  total_demands: number;
+  p1_demands: number;
+  planned_blocks_count: number;
+  reserved_hours: number;
+  status: 'EXECUTING' | 'COORDINATED' | 'RESERVED' | 'STRATEGIC';
+  change_category: 'COMPLETED' | 'DEFERRED' | 'NEWLY_CRITICAL' | 'SHIFTED' | 'UNCHANGED';
+}
+
+export interface RollingProgramme {
+  current_week: number;
+  total_weeks: number;
+  weeks: RollingWeekItem[];
+  last_roll_forward?: string | null;
+  roll_forward_deltas?: Record<string, number> | null;
+}
+
+export interface TimetableStop {
+  station_code: string;
+  km: number;
+  arrival_mins: number;
+  departure_mins: number;
+  dwell_min: number;
+}
+
+export interface CoaTrain {
+  train_id: string;
+  service_number: string;
+  train_name: string;
+  train_type: string;
+  priority_class: number;
+  direction: 'UP' | 'DOWN';
+  stops: TimetableStop[];
+}
+
+export interface GoodsForecast {
+  rake_id: string;
+  cargo_type: string;
+  origin_station: string;
+  destination_station: string;
+  direction: 'UP' | 'DOWN';
+  target_window_start_mins: number;
+  target_window_end_mins: number;
+  speed_kmph: number;
+  loop_line_stabling_allowed: boolean;
+  source_system: string;
+}
+
 export interface BdmsExport {
   bdms_reference: string;
   generated_timestamp: string;
@@ -169,10 +219,13 @@ export interface PlanningRun {
   composition_clusters: CompositionCluster[];
   weekly_plan: PlannedBlock[];
   monthly_plan: MonthlyPlanReservation[];
+  rolling_programme?: RollingProgramme | null;
+  train_movements?: CoaTrain[];
+  freight_forecasts?: GoodsForecast[];
   validation_result: ValidationReport;
   backtest_result: BacktestResult;
   solver_result: BackendSolverResult;
-  decision_status: 'PENDING_REVIEW' | 'APPROVED' | 'OVERRIDDEN' | 'REPLANNED';
+  decision_status: 'PENDING_REVIEW' | 'APPROVED' | 'OVERRIDDEN' | 'REPLANNED' | 'DEFERRED';
   approved_by?: string | null;
   approval_timestamp?: string | null;
   override_reason?: string | null;
@@ -199,6 +252,26 @@ export async function scenarioDenyBlock(blockId: string) {
   });
 }
 
+export async function scenarioOverrunBlock(blockId?: string, overrunMin = 35) {
+  return fetchApi<PlanningRun>('/runs/scenarios/overrun', {
+    method: 'POST',
+    body: JSON.stringify({ block_id: blockId, overrun_min: overrunMin })
+  });
+}
+
+export async function scenarioInjectFreight(data?: {
+  cargo_type?: string;
+  origin?: string;
+  destination?: string;
+  target_window_start?: number;
+  target_window_end?: number;
+}) {
+  return fetchApi<PlanningRun>('/runs/scenarios/inject-freight', {
+    method: 'POST',
+    body: JSON.stringify(data || {})
+  });
+}
+
 export async function scenarioAddCriticalTask(data: {
   defect_type?: string;
   line?: string;
@@ -212,6 +285,10 @@ export async function scenarioAddCriticalTask(data: {
   });
 }
 
+export async function rollingRollForward() {
+  return fetchApi<PlanningRun>('/runs/rolling/roll-forward', { method: 'POST' });
+}
+
 export async function approvePlan(plannerName = 'Chief Block Planner', plannerRole = 'Operating / Senior DOM') {
   return fetchApi<PlanningRun>('/runs/decision/approve', {
     method: 'POST',
@@ -219,9 +296,60 @@ export async function approvePlan(plannerName = 'Chief Block Planner', plannerRo
   });
 }
 
+export async function deferPlan(reason = 'Co-locating with subsequent weekend mega block', officerName = 'Senior DOM / Planning') {
+  return fetchApi<PlanningRun>('/runs/decision/defer', {
+    method: 'POST',
+    body: JSON.stringify({ reason, officer_name: officerName })
+  });
+}
+
 export async function overridePlan(request: PlannerOverrideRequest) {
   return fetchApi<PlanningRun>('/runs/decision/override', {
     method: 'POST',
     body: JSON.stringify(request)
+  });
+}
+
+export async function stationMasterAcknowledge(stationCode: string, blockId: string, officerName = 'Station Master') {
+  return fetchApi<PlanningRun>('/runs/roles/station-master/acknowledge', {
+    method: 'POST',
+    body: JSON.stringify({ station_code: stationCode, block_id: blockId, officer_name: officerName })
+  });
+}
+
+export async function stationMasterEscalate(stationCode: string, reason: string, officerName = 'Station Master') {
+  return fetchApi<PlanningRun>('/runs/roles/station-master/escalate', {
+    method: 'POST',
+    body: JSON.stringify({ station_code: stationCode, reason, officer_name: officerName })
+  });
+}
+
+export async function departmentAddDemand(data: {
+  department: string;
+  defect_type: string;
+  line: string;
+  km_start: number;
+  km_end: number;
+  duration_min?: number;
+  machine_required?: string;
+  severity?: number;
+}) {
+  return fetchApi<PlanningRun>('/runs/roles/department/add-demand', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+}
+
+export async function departmentUpdateReadiness(taskId: string, readinessStatus = 'READY', officerName = 'Senior Section Engineer') {
+  return fetchApi<PlanningRun>('/runs/roles/department/update-readiness', {
+    method: 'POST',
+    body: JSON.stringify({ task_id: taskId, readiness_status: readinessStatus, officer_name: officerName })
+  });
+}
+
+export async function departmentRequestBlock(department: string, section: string, preferredWindow: string, officerName = 'Section Engineer') {
+  return fetchApi<PlanningRun>('/runs/roles/department/request-block', {
+    method: 'POST',
+    body: JSON.stringify({ department, section, preferred_window: preferredWindow, officer_name: officerName })
   });
 }

@@ -82,15 +82,15 @@ export function ScenarioControlStrip({
   statusText,
 }: ScenarioControlStripProps) {
   return (
-    <div className="bg-slate-950 border-b border-slate-800 px-4 py-2.5 sm:px-6">
+    <div className="bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 px-4 py-2.5 sm:px-6">
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3">
         {/* Left: Test Condition Selector Tabs */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1 xl:pb-0 scrollbar-none">
-          <span className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap mr-1">
+          <span className="text-[11px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap mr-1">
             TEST CONDITION:
           </span>
 
-          <div className="flex items-center gap-1.5 p-1 bg-slate-900/90 rounded-lg border border-slate-800">
+          <div className="flex items-center gap-1.5 p-1 bg-white dark:bg-slate-900/90 rounded-lg border border-slate-200 dark:border-slate-800 shadow-xs">
             {CONDITIONS.map((c) => {
               const Icon = c.icon;
               const isActive = activeCondition === c.id;
@@ -103,22 +103,22 @@ export function ScenarioControlStrip({
                   className={cn(
                     "flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-all whitespace-nowrap",
                     isActive
-                      ? "bg-blue-600 text-white shadow-md shadow-blue-900/30 border border-blue-400/50"
-                      : "text-slate-300 hover:text-white hover:bg-slate-800/80 border border-transparent"
+                      ? "bg-blue-600 text-white shadow-sm shadow-blue-500/30 border border-blue-500"
+                      : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 border border-transparent"
                   )}
                   title={c.desc}
                 >
-                  <Icon className={cn("w-3.5 h-3.5", isActive ? "text-white" : isFlagship ? "text-amber-400" : "text-slate-400")} />
+                  <Icon className={cn("w-3.5 h-3.5", isActive ? "text-white" : isFlagship ? "text-amber-500 dark:text-amber-400" : "text-slate-500 dark:text-slate-400")} />
                   <span>{c.label}</span>
                   {c.tag && (
                     <span
                       className={cn(
                         "text-[9px] px-1.5 py-0.2 rounded font-mono font-bold",
                         isActive
-                          ? "bg-blue-900/60 text-blue-100"
+                          ? "bg-blue-800/80 text-blue-100"
                           : isFlagship
-                          ? "bg-amber-950 text-amber-300 border border-amber-800/50"
-                          : "bg-slate-800 text-slate-400"
+                          ? "bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800/50"
+                          : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
                       )}
                     >
                       {c.tag}
@@ -132,16 +132,16 @@ export function ScenarioControlStrip({
 
         {/* Right: State & Reset / Save Actions */}
         <div className="flex items-center gap-2 justify-end text-xs font-mono">
-          <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300">
+          <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 shadow-xs">
             <span className="text-slate-500">Status:</span>
             <span
               className={cn(
                 "font-semibold",
                 statusText.includes("FEASIBLE") || statusText.includes("OPTIMIZED")
-                  ? "text-emerald-400"
+                  ? "text-emerald-600 dark:text-emerald-400"
                   : statusText.includes("DENIED") || statusText.includes("INSUFFICIENT") || statusText.includes("CONFLICT")
-                  ? "text-amber-400"
-                  : "text-blue-400"
+                  ? "text-amber-600 dark:text-amber-400"
+                  : "text-blue-600 dark:text-blue-400"
               )}
             >
               {statusText}
@@ -150,10 +150,10 @@ export function ScenarioControlStrip({
 
           <button
             onClick={onSaveSnapshot}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-900 hover:bg-slate-850 border border-slate-700 text-slate-200 font-mono transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-850 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-mono transition-colors shadow-xs"
             title="Save current scenario state as a snapshot"
           >
-            <BookmarkPlus className="w-3.5 h-3.5 text-blue-400" />
+            <BookmarkPlus className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
             <span>SAVE SNAPSHOT</span>
           </button>
 
@@ -161,10 +161,10 @@ export function ScenarioControlStrip({
             onClick={onResetScenario}
             disabled={!isModified && activeCondition === "BASELINE"}
             className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-md font-mono transition-colors",
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-md font-mono transition-colors shadow-xs",
               isModified || activeCondition !== "BASELINE"
-                ? "bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-600/40"
-                : "bg-slate-900 text-slate-600 border border-slate-800 cursor-not-allowed"
+                ? "bg-amber-50 hover:bg-amber-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-600/40"
+                : "bg-slate-100 dark:bg-slate-900 text-slate-400 dark:text-slate-600 border border-slate-200 dark:border-slate-800 cursor-not-allowed"
             )}
             title="Restore canonical baseline B-014 02:20–04:10"
           >
