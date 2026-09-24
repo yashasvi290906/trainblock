@@ -392,7 +392,7 @@ class PlanningRunManager:
             status="CONFLICT"
         ))
 
-        # Re-run full independent validation with updated blocks
+        # 2. Ingest and prioritize tasks
         tasks = ingestion_service.ingest_all(
             tms_data=self.active_tms,
             smms_data=self.active_smms,
@@ -400,6 +400,26 @@ class PlanningRunManager:
             corridors=self.active_corridors
         )
         prioritized = prioritization_service.prioritize_tasks(tasks)
+
+        # Trigger CP-SAT replan for corridor clusters taking into account the extended burst window
+        clusters = composition_service.compose_tasks(prioritized)
+        overrun_window_spec = {
+            "section_id": target.section,
+            "line": target.line,
+            "start_min": target.start_minutes_from_midnight,
+            "end_min": new_end_min
+        }
+        replan_solver_res = cp_sat_planner.solve(
+            clusters=clusters,
+            trains=self.active_trains,
+            goods_forecasts=self.active_goods,
+            corridors=self.active_corridors,
+            time_limit_sec=5.0,
+            denied_windows=[overrun_window_spec]
+        )
+        self.current_run.solver_result = replan_solver_res
+
+        # Re-run full independent validation with updated blocks
         val_report = validation_service.validate_plan(self.current_run.weekly_plan, self.active_trains, all_tasks=prioritized)
 
         # Add explicit overrun buffer violation check to validation report
@@ -443,6 +463,14 @@ class PlanningRunManager:
             event_type="OPERATIONAL_RECOVERY_GENERATED",
             actor="CONTROLLER_OPS",
             details=f"Operational recovery generated: Regulate {primary_train.service_number} at adjacent loop siding; curtail downstream manual packing passes by {overrun_min} min.",
+            planning_run_id=self.current_run.planning_run_id
+        ))
+        self.audit_log.append(AuditLogEntry(
+            log_id=f"AUD-{len(self.audit_log) + 1:03d}",
+            timestamp=now_iso,
+            event_type="SCENARIO_REPLAN",
+            actor="CP_SAT_OPTIMIZER",
+            details=f"CP-SAT re-solved schedule around +{overrun_min}m possession burst in {replan_solver_res.solve_time_ms:.1f}ms ({replan_solver_res.solver_status}).",
             planning_run_id=self.current_run.planning_run_id
         ))
         self.current_run.audit_events = list(self.audit_log)

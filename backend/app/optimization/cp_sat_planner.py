@@ -247,6 +247,23 @@ class CpSatPlanner:
                     if max(w1["start_min"], w2["start_min"]) < min(w1["end_min"], w2["end_min"]):
                         model.Add(sum(vars_w1) + sum(vars_w2) <= 1)
 
+        # Constraint 5: Heavy Machine Resource Non-Overlap (BCM, CSM, PQRS quota <= 1)
+        HEAVY_MACHINES = ["BCM", "CSM", "PQRS", "Ballast Cleaning", "Track Relaying"]
+        for m_kw in HEAVY_MACHINES:
+            m_records = [
+                rec for rec in candidate_pair_map.values()
+                if any(m_kw.lower() in m.lower() for m in rec["cluster"].machines_assigned)
+            ]
+            for i in range(len(m_records)):
+                r1 = m_records[i]
+                w1 = r1["window"]
+                for j in range(i + 1, len(m_records)):
+                    r2 = m_records[j]
+                    w2 = r2["window"]
+                    # If time intervals overlap
+                    if max(w1["start_min"], w2["start_min"]) < min(w1["end_min"], w2["end_min"]):
+                        model.Add(r1["x_var"] + r2["x_var"] <= 1)
+
         # Build Multi-Objective Function
         objective_terms = build_objective_terms(model, cluster_assignment_vars, clusters)
         if p1_penalties:

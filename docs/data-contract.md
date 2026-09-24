@@ -23,7 +23,7 @@ This document defines the data contract for the six synthetic input feeds and th
 The single source of truth for the active planning session:
 ```typescript
 interface PlanningRun {
-  planning_run_id: string;          // e.g. "RUN-MAS-2026-0923-0825"
+  planning_run_id: string;          // e.g. "RUN-2026-001"
   created_at: string;
   data_version: string;             // "SYNTHETIC_V1_PROTOTYPE"
   is_baseline: boolean;

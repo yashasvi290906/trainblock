@@ -77,7 +77,15 @@ class ValidationService:
         elif all_tasks is not None:
             expected_p1 = sum(1 for t in all_tasks if getattr(t, "safety_tier", None) == "P1")
         else:
-            expected_p1 = scheduled_p1_count
+            try:
+                from .run_manager import run_manager
+                if run_manager.current_run and run_manager.current_run.prioritized_tasks:
+                    all_tasks = run_manager.current_run.prioritized_tasks
+                    expected_p1 = sum(1 for t in all_tasks if getattr(t, "safety_tier", None) == "P1")
+                else:
+                    expected_p1 = scheduled_p1_count
+            except Exception:
+                expected_p1 = scheduled_p1_count
 
         scheduled_task_ids = set(t.task_id for t in scheduled_tasks)
         unscheduled_p1_ids = [t.task_id for t in (all_tasks or []) if getattr(t, "safety_tier", None) == "P1" and t.task_id not in scheduled_task_ids]

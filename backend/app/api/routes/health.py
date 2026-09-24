@@ -11,5 +11,5 @@ def health_check():
         "version": settings.VERSION,
         "solver_backend": "Google OR-Tools CP-SAT",
         "ml_backend": "XGBoost Regressor",
-        "corridor": "Chennai Central (MAS) - Arakkonam (AJJ)"
+        "corridor": f"{settings.CORRIDOR_NAME} ({settings.CORRIDOR_CODE})"
     }
